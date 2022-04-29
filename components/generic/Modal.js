@@ -32,7 +32,7 @@ const Modal = () => {
 				className={clsx(
 					modal && [
 						"flex flex-row justify-center p-8 h-min",
-						"text-black bg-slate-100 z-50",
+						"roounded-sm text-black bg-slate-100 z-50",
 					]
 				)}
 			>
