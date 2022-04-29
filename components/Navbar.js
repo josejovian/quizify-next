@@ -1,39 +1,41 @@
 import clsx from "clsx";
-
-const links = [
-	{
-		name: "Login",
-		onClick: () => {
-			console.log("Login");
-		},
-		forGuests: true,
-	},
-	{
-		name: "Register",
-		onClick: () => {
-			console.log("Register");
-		},
-		forGuests: true,
-	},
-	{
-		name: "Quizzes",
-		link: "/",
-		forGuests: false,
-	},
-	{
-		name: "Works",
-		link: "/",
-		forGuests: false,
-	},
-	{
-		name: "Logout",
-		link: "/",
-		forGuests: false,
-	},
-];
+import { useContext } from "react";
+import { ModalContext } from "./generic/Modal";
+import Login from "./landing/Login";
+import Register from "./landing/Register";
 
 const Navbar = () => {
+	const { setModal } = useContext(ModalContext);
+
 	const loggedIn = null;
+
+	const links = [
+		{
+			name: "Login",
+			onClick: showLoginForm,
+			forGuests: true,
+		},
+		{
+			name: "Register",
+			onClick: showRegisterForm,
+			forGuests: true,
+		},
+		{
+			name: "Quizzes",
+			link: "/",
+			forGuests: false,
+		},
+		{
+			name: "Works",
+			link: "/",
+			forGuests: false,
+		},
+		{
+			name: "Logout",
+			link: "/",
+			forGuests: false,
+		},
+	];
 
 	const linkElements = links
 		.filter((link) => link.forGuests === (loggedIn === null))
@@ -47,6 +49,18 @@ const Navbar = () => {
 				{link.name}
 			</a>
 		));
+
+	function showLoginForm() {
+		setModal(
+			<Login />
+		);
+	}
+
+	function showRegisterForm() {
+		setModal(
+			<Register />
+		);
+	}
 
 	return (
 		<div
