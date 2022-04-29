@@ -52,9 +52,9 @@ const Navbar = () => {
 		<div
 			className={clsx(
 				"pageify",
-				"fixed top-0 left-0 py-4 w-screen",
+				"fixed top-0 left-0 py-4",
 				"flex flex-row justify-between",
-				"bg-zinc-700 text-white"
+				"bg-zinc-700 text-white z-20"
 			)}
 		>
 			<a href="/">
