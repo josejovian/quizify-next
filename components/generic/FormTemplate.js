@@ -8,10 +8,18 @@ import { useState } from "react";
 const FormTemplate = ({ title, formik, fields }) => {
 	const [disabled, setDisabled] = useState(false);
 
+	function collectValues() {
+		let json = {};
+		fields.forEach((field) => {
+			json[field.id] = document.getElementById(field.id).value;
+		});
+		return json;
+	}
+
 	function onSubmit() {
 		setDisabled(true);
 		setTimeout(() => {
-			formik.onSubmit();
+			formik.onSubmit(collectValues());
 			setDisabled(false);
 		}, 500);
 	}
