@@ -27,7 +27,7 @@ const FormTemplate = ({ title, formik, fields }) => {
 				{({ errors, touched }) => (
 					<Form className="flex flex-col">
 						{fields.map((field) => (
-							<div className="flex flex-col mb-4">
+							<div key={field.id} className="flex flex-col mb-4">
 								<label
 									className="mb-1 uppercase text-sm text-slate-400 tracking-widest font-semibold"
 									htmlFor={field.id}
