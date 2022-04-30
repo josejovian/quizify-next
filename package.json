@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "clsx": "^1.1.1",
     "formik": "^2.2.9",
     "mongodb": "^4.5.0",
