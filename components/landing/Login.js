@@ -7,7 +7,13 @@ const LoginSchema = Yup.object().shape({
 	password: Yup.string().required("Password is required!"),
 });
 
-const Login = ({ login }) => {
+const Login = ({ login, reduxLogin }) => {
+
+	function formToRedux(data) {
+		delete data.password;
+		reduxLogin(data);
+	}
+
 	return (
 		<FormTemplate
 			title="Login"
@@ -31,6 +37,7 @@ const Login = ({ login }) => {
 					type: "password",
 				},
 			]}
+			callback={{success: formToRedux}}
 		/>
 	);
 };

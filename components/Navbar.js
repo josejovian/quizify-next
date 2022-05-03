@@ -3,11 +3,12 @@ import { useContext } from "react";
 import { ModalContext } from "./generic/Modal";
 import Login from "./landing/Login";
 import Register from "./landing/Register";
+import { register, login } from "./api";
+import { connect } from "react-redux";
+import { mapDispatchToProps, mapStateToProps } from "./redux/setter";
 
-const Navbar = () => {
+const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 	const { setModal } = useContext(ModalContext);
-
-	const loggedIn = null;
 
 	const links = [
 		{
@@ -32,7 +33,7 @@ const Navbar = () => {
 		},
 		{
 			name: "Logout",
-			link: "/",
+			onClick: logoutUser,
 			forGuests: false,
 		},
 	];
@@ -51,15 +52,11 @@ const Navbar = () => {
 		));
 
 	function showLoginForm() {
-		setModal(
-			<Login />
-		);
+		setModal(<Login login={login} reduxLogin={loginUser} />);
 	}
 
 	function showRegisterForm() {
-		setModal(
-			<Register />
-		);
+		setModal(<Register register={register} reduxLogout={logoutUser} />);
 	}
 
 	return (
@@ -79,4 +76,4 @@ const Navbar = () => {
 	);
 };
 
-export default Navbar;
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
