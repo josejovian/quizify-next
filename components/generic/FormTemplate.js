@@ -3,10 +3,16 @@ import Image from "next/image";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Button from "./Button";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ModalContext } from "./Modal";
 
-const FormTemplate = ({ title, formik, fields }) => {
+const FormTemplate = ({ title, formik, fields, callback }) => {
 	const [disabled, setDisabled] = useState(false);
+	const { modal, setModal } = useContext(ModalContext);
+
+	useEffect(() => {
+		callback = { ...callback, fail: (message) => alert(message) };
+	}, []);
 
 	function collectValues() {
 		let json = {};
@@ -16,12 +22,21 @@ const FormTemplate = ({ title, formik, fields }) => {
 		return json;
 	}
 
-	function onSubmit() {
+	async function onSubmit() {
 		setDisabled(true);
-		setTimeout(() => {
-			formik.onSubmit(collectValues());
+		let result;
+		try {
+			result = await formik.onSubmit(collectValues());
+		} catch(e) {
 			setDisabled(false);
-		}, 500);
+		}
+
+		if (result.status === "ok") {
+			callback.success(result);
+			setModal(null);
+		} else callback.fail(result.status);
+		
+		setDisabled(false);
 	}
 
 	return (
@@ -30,7 +45,7 @@ const FormTemplate = ({ title, formik, fields }) => {
 			<Formik
 				initialValues={formik.initialValues}
 				validationSchema={formik.validationSchema}
-				onSubmit={() => onSubmit()}
+				onSubmit={async () => onSubmit()}
 			>
 				{({ errors, touched }) => (
 					<Form className="flex flex-col">
@@ -54,10 +69,7 @@ const FormTemplate = ({ title, formik, fields }) => {
 								) : null}
 							</div>
 						))}
-						<Button
-							isDisabled={disabled}
-							type="submit"
-						>
+						<Button isDisabled={disabled} type="submit">
 							Submit
 						</Button>
 					</Form>
