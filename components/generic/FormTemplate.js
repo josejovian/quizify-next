@@ -10,9 +10,7 @@ const FormTemplate = ({ title, formik, fields, callback }) => {
 	const [disabled, setDisabled] = useState(false);
 	const { modal, setModal } = useContext(ModalContext);
 
-	useEffect(() => {
-		callback = { ...callback, fail: (message) => alert(message) };
-	}, []);
+	const cb = { ...callback, fail: (message) => console.log(message) };
 
 	function collectValues() {
 		let json = {};
@@ -32,9 +30,9 @@ const FormTemplate = ({ title, formik, fields, callback }) => {
 		}
 
 		if (result.status === "ok") {
-			callback.success(result);
+			cb.success(result);
 			setModal(null);
-		} else callback.fail(result.status);
+		} else cb.fail(result.status);
 		
 		setDisabled(false);
 	}
