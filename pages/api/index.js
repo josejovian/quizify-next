@@ -39,7 +39,8 @@ async function register(data) {
 		const user = new User.model(data);
 		await user.save();
 
-		let result = { ...user, status: "ok" };
+		let result = user._doc;
+		result = { ...result, status: "ok" };
 		return result;
 	} catch (e) {
 		return genericFail;
