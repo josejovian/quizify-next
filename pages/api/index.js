@@ -2,8 +2,9 @@
 
 import dbConnect from "/backend/dbConnect";
 const User = require("/backend/models/User");
+const bcrypt = require("bcryptjs");
 
-const genericFail = { status: "fail"};
+const genericFail = { status: "fail" };
 
 export default async function handler(req, res) {
 	await dbConnect();
@@ -23,7 +24,10 @@ export default async function handler(req, res) {
 			});
 			break;
 		case "login":
-			result = await login({ email: req.body.email, password: req.body.password });
+			result = await login({
+				email: req.body.email,
+				password: req.body.password,
+			});
 			break;
 	}
 
@@ -35,9 +39,9 @@ async function register(data) {
 		const user = new User.model(data);
 		await user.save();
 
-		let result = {...user, status: "ok"};
+		let result = { ...user, status: "ok" };
 		return result;
-	} catch(e) {
+	} catch (e) {
 		return genericFail;
 	}
 }
@@ -46,22 +50,34 @@ async function login(data) {
 	try {
 		let result = await User.model.findOne({ email: data.email });
 
-		if(!result) {
+		if (!result) {
 			console.log("Not Found");
 			return { status: "fail_not_found" };
 		}
 
 		result = result._doc;
 
-		if(result.password === data.password) {
-			result = { ...result, status: "ok" };
-		} else {
-			result = { ...result, status: "fail_mismatch" };
-		}
-		console.log(result);
-	
-		return result;
-	} catch(e) {
+		let promise = new Promise((resolve, reject) => {
+			/*
+				Source:
+				https://coderrocketfuel.com/article/store-passwords-in-mongodb-with-node-js-mongoose-and-bcrypt
+			*/
+			bcrypt.compare(data.password, result.password, async function (error, isMatch) {
+				if (error) {
+					console.log("ERROR");
+					reject(error);
+				} else if (!isMatch) {
+					console.log("Doesn't Match");
+					resolve({ ...result, status: "fail_mismatch" });
+				} else {
+					console.log("OK");
+					resolve({ ...result, status: "ok" });
+				}
+			});
+		});
+		
+		return await promise;
+	} catch (e) {
 		console.log(e);
 		return genericFail;
 	}
