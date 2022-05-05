@@ -76,7 +76,7 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 	}
 
 	function showRegisterForm() {
-		setModal(<Register register={register} reduxLogout={logoutUser} />);
+		setModal(<Register register={register} reduxLogin={loginUser} />);
 	}
 
 	return (
