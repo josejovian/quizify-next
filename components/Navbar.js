@@ -1,16 +1,17 @@
-import clsx from "clsx";
-import { useContext } from "react";
-import { ModalContext } from "./generic/Modal";
-import Login from "./landing/Login";
-import Register from "./landing/Register";
+import { useState, useContext, useEffect } from "react";
 import { register, login } from "./api";
 import { connect } from "react-redux";
 import { mapDispatchToProps, mapStateToProps } from "./redux/setter";
+import clsx from "clsx";
+import Login from "./landing/Login";
+import Register from "./landing/Register";
+import { ModalContext } from "./generic/Modal";
 
 const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 	const { setModal } = useContext(ModalContext);
+	const [elements, setElements] = useState([]);
 
-	const links = [
+	const baseLinks = [
 		{
 			name: "Login",
 			onClick: showLoginForm,
@@ -31,25 +32,44 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 			link: "/",
 			forGuests: false,
 		},
-		{
-			name: "Logout",
-			onClick: logoutUser,
-			forGuests: false,
-		},
 	];
 
-	const linkElements = links
-		.filter((link) => link.forGuests === (loggedIn === null))
-		.map((link) => (
-			<a
-				key={link.name}
-				className="ml-8"
-				href={link.link ?? "#"}
-				onClick={link.onClick ?? ""}
-			>
-				{link.name}
-			</a>
-		));
+	let links = baseLinks;
+
+	useEffect(() => {
+		if (loggedIn) {
+			links = [
+				...baseLinks,
+				[
+					{
+						name: loggedIn.username,
+						forGuests: false,
+					},
+					{
+						name: "Logout",
+						onClick: logoutUser,
+						forGuests: false,
+					},
+				],
+			];
+			links = links.flat();
+		}
+
+		setElements(
+			links
+				.filter((link) => link.forGuests === (loggedIn === null))
+				.map((link) => (
+					<a
+						key={link.name}
+						className="ml-8"
+						href={link.link ?? "#"}
+						onClick={link.onClick ?? function () {}}
+					>
+						{link.name}
+					</a>
+				))
+		);
+	}, [loggedIn]);
 
 	function showLoginForm() {
 		setModal(<Login login={login} reduxLogin={loginUser} />);
@@ -71,7 +91,7 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 			<a href="/">
 				<span className="font-semibold">QUIZIFY</span>
 			</a>
-			<div className="flex">{linkElements}</div>
+			<div className="flex">{elements}</div>
 		</div>
 	);
 };
