@@ -8,7 +8,13 @@ const RegisterSchema = Yup.object().shape({
 	password: Yup.string().required("Password is required!"),
 });
 
-const Register = ({ register }) => {
+const Register = ({ register, reduxLogin }) => {
+
+	function formToRedux(data) {
+		delete data.password;
+		reduxLogin(data);
+	}
+
 	return (
 		<FormTemplate
 			title="Register"
@@ -38,6 +44,7 @@ const Register = ({ register }) => {
 					type: "password",
 				},
 			]}
+			callback={{success: formToRedux}}
 		/>
 	);
 };
