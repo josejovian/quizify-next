@@ -8,6 +8,10 @@ const quizSchema = new mongoose.Schema({
 		ref: 'User'
 	},
 	duration: Number,
+	questions: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Question'
+	}],
 }, { timestamps: true });
 
 module.exports = {
