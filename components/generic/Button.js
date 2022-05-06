@@ -3,11 +3,10 @@ import clsx from "clsx";
 const Button = ({
 	id,
 	children,
-	variant = "solid",
+	variant = "primary",
 	onClick,
 	isDisabled = false,
 	className,
-	color = "blue",
 	type,
 }) => {
 	return (
@@ -18,10 +17,15 @@ const Button = ({
 				"transition-colors duration-100",
 				"disabled:cursor-not-allowed disabled:bg-opacity-50",
 				[
-					variant === "solid" && [
-						`bg-${color}-600 text-white`,
-						`hover:bg-${color}-700`,
-						`active:bg-${color}-800`,
+					variant === "primary" && [
+						`bg-blue-600 text-white`,
+						`hover:bg-blue-700`,
+						`active:bg-blue-800`,
+					],
+					variant === "secondary" && [
+						`bg-gray-500 text-white`,
+						`hover:bg-gray-600`,
+						`active:bg-gray-700`,
 					],
 				],
 				className
