@@ -11,9 +11,9 @@ export default async function handler(req, res) {
 
 	const route = req.body.route;
 
-	let result = {};
-
-	console.log(req.body);
+	let result = {
+		status: "fail",
+	};
 
 	switch (route) {
 		case "register":
@@ -29,6 +29,10 @@ export default async function handler(req, res) {
 				password: req.body.password,
 			});
 			break;
+		default:
+			result = {
+				status: "ok",
+			};
 	}
 
 	res.status(200).json(result);
@@ -63,20 +67,24 @@ async function login(data) {
 				Source:
 				https://coderrocketfuel.com/article/store-passwords-in-mongodb-with-node-js-mongoose-and-bcrypt
 			*/
-			bcrypt.compare(data.password, result.password, async function (error, isMatch) {
-				if (error) {
-					console.log("ERROR");
-					reject(error);
-				} else if (!isMatch) {
-					console.log("Doesn't Match");
-					resolve({ ...result, status: "fail_mismatch" });
-				} else {
-					console.log("OK");
-					resolve({ ...result, status: "ok" });
+			bcrypt.compare(
+				data.password,
+				result.password,
+				async function (error, isMatch) {
+					if (error) {
+						console.log("ERROR");
+						reject(error);
+					} else if (!isMatch) {
+						console.log("Doesn't Match");
+						resolve({ ...result, status: "fail_mismatch" });
+					} else {
+						console.log("OK");
+						resolve({ ...result, status: "ok" });
+					}
 				}
-			});
+			);
 		});
-		
+
 		return await promise;
 	} catch (e) {
 		console.log(e);
