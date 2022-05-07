@@ -67,7 +67,7 @@ const FormTemplate = ({ title, formik, fields, callback }) => {
 								) : null}
 							</div>
 						))}
-						<Button isDisabled={disabled} type="submit">
+						<Button isDisabled={disabled} className="mt-2" type="submit">
 							Submit
 						</Button>
 					</Form>

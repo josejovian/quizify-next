@@ -1,30 +1,62 @@
 import clsx from "clsx";
 import Image from "next/image";
+import { useEffect } from "react";
+import { connect } from "react-redux";
+import {
+	mapDispatchToProps,
+	mapStateToProps,
+} from "../components/redux/setter";
+import api from "../components/api";
+import Landing from "../components/home/Landing";
+import Quizzes from "../components/home/Quizzes";
 
-const Home = () => {
+const Home = ({ loggedIn, queryResult }) => {
+	const { quizzes, result } = queryResult;
+
+	useEffect(() => {
+		console.log(quizzes);
+	}, [queryResult]);
+
 	return (
 		<div
 			className={clsx(
 				"absolute top-0 w-screen h-screen",
-				"flex items-center justify-center"
+				"flex justify-center"
 			)}
 		>
-			<div
-				id="landing-background"
-				className="absolute top-0 left-0 w-screen h-screen opacity-20"
-			>
-				<Image src="/landing.jpg" layout="fill" />
-			</div>
-			<div className="flex flex-col items-center justify-center text-center">
-				<h1 className="text-4xl md:text-8xl z-20">Quizify</h1>
-				<p className="mt-8 text-xl md:text-4xl z-20">
-					Make, do and review quizzes.
-					<br />
-					Sign up to gain access to the site's features.
-				</p>
-			</div>
+			{loggedIn ? (
+				<Quizzes
+					quizzes={quizzes.filter(
+						(quiz) =>
+							quiz.isPublic ||
+							(!quiz.isPublic && quiz.author._id === loggedIn._id)
+					)}
+				/>
+			) : (
+				<Landing />
+			)}
 		</div>
 	);
 };
 
-export default Home;
+export const getStaticProps = async () => {
+	let result = {},
+		quizzes = [];
+
+	try {
+		quizzes = await api.get("/api/quiz/all");
+		quizzes = quizzes.data;
+		console.log(quizzes);
+		result = { status: "ok" };
+	} catch (e) {
+		console.log(e);
+		result = { status: "fail" };
+	}
+
+	return {
+		props: { queryResult: { quizzes: quizzes, result: result } },
+		revalidate: 20,
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

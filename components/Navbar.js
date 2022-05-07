@@ -3,8 +3,8 @@ import { register, login } from "./api";
 import { connect } from "react-redux";
 import { mapDispatchToProps, mapStateToProps } from "./redux/setter";
 import clsx from "clsx";
-import Login from "./landing/Login";
-import Register from "./landing/Register";
+import Login from "./home/Login";
+import Register from "./home/Register";
 import { ModalContext } from "./generic/Modal";
 
 const Navbar = ({ loggedIn, loginUser, logoutUser }) => {

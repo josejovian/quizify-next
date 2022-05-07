@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const baseURL = process.env.baseURL;
+const baseURL = process.env.BASE_URL;
 
 const api = axios.create({
 	baseURL
 });
 
 export async function register({email, username, password}) {
-	let result = await api.post("/api/", {
+	let result = await api.post("/api/account/", {
 		route: "register",
 		email: email,
 		username: username,
@@ -27,7 +27,7 @@ export async function register({email, username, password}) {
 }
 
 export async function login({email, password}) {
-	let result = await api.post("/api/", {
+	let result = await api.post("/api/account/", {
 		route: "login",
 		email: email,
 		password: password,
