@@ -20,7 +20,7 @@ const Quiz = ({ quiz }) => {
 				<div className="flex overflow-x-auto">
 					<Props>
 						<MdPerson className="mr-2" />
-						<span>josejovian</span>
+						<span>{ quiz.author.username }</span>
 					</Props>
 					<Props>
 						<MdQuestionAnswer className="mr-2" />
