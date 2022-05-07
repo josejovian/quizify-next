@@ -24,7 +24,17 @@ const Home = ({ loggedIn, queryResult }) => {
 				"flex justify-center"
 			)}
 		>
-			{loggedIn ? <Quizzes quizzes={quizzes} /> : <Landing />}
+			{loggedIn ? (
+				<Quizzes
+					quizzes={quizzes.filter(
+						(quiz) =>
+							quiz.isPublic ||
+							(!quiz.isPublic && quiz.author._id === loggedIn._id)
+					)}
+				/>
+			) : (
+				<Landing />
+			)}
 		</div>
 	);
 };
