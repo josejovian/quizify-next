@@ -1,5 +1,6 @@
 import dbConnect from "/backend/dbConnect";
 const Quiz = require("/backend/models/Quiz");
+const User = require("/backend/models/User");
 
 export default async function handler(req, res) {
 	await dbConnect();
@@ -7,7 +8,7 @@ export default async function handler(req, res) {
 	let result = [];
 
 	try {
-		result = await Quiz.model.find();
+		result = await Quiz.model.find().populate("author");
 	} catch (e) {}
 
 	res.status(200).json(result);
