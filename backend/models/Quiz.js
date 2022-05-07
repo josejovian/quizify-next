@@ -12,6 +12,7 @@ const quizSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Question'
 	}],
+	isPublic: false,
 }, { timestamps: true });
 
 module.exports = {
