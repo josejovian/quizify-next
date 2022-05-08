@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { createContext, useState } from "react";
 
 import { Provider } from "react-redux";
 import { createStore } from "redux";
@@ -21,8 +21,11 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 const store = createStore(persistedReducer);
 const persistor = persistStore(store);
 
+export const DataContext = createContext(null);
+
 function MyApp({ Component, pageProps }) {
 	const [modal, setModal] = useState(null);
+	const [data, setData] = useState(null);
 
 	return (
 		<Provider store={store}>
@@ -33,10 +36,17 @@ function MyApp({ Component, pageProps }) {
 						setModal: setModal,
 					}}
 				>
-					<Modal />
-					<Navbar />
-					<Component {...pageProps} />
-					<Footer />
+					<DataContext.Provider
+						value={{
+							data: data,
+							setData: setData,
+						}}
+					>
+						<Modal />
+						<Navbar />
+						<Component {...pageProps} />
+						<Footer />
+					</DataContext.Provider>
 				</ModalContext.Provider>
 			</PersistGate>
 		</Provider>
