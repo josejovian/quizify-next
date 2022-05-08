@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { connect } from "react-redux";
 import {
 	mapDispatchToProps,
@@ -9,9 +9,23 @@ import {
 import api from "../components/api";
 import Landing from "../components/home/Landing";
 import Quizzes from "../components/home/Quizzes";
+import { DataContext } from "./_app";
 
 const Home = ({ loggedIn, queryResult }) => {
 	const { quizzes, result } = queryResult;
+	const { data, setData } = useContext(DataContext);
+
+	useEffect(() => {
+		let _users = {}, _emails = {};
+		queryResult["users"].forEach((user) => {
+			_users[user.username] = 1;
+			_emails[user.email] = 1;
+		});
+		setData({
+			users: _users,
+			emails: _emails,
+		});
+	}, []);
 
 	useEffect(() => {
 		console.log(quizzes);
@@ -41,12 +55,16 @@ const Home = ({ loggedIn, queryResult }) => {
 
 export const getStaticProps = async () => {
 	let result = {},
-		quizzes = [];
-
+		quizzes = [],
+		users = [];
 	try {
 		quizzes = await api.get("/api/quiz/all");
 		quizzes = quizzes.data;
-		console.log(quizzes);
+
+		users = await api.get("api/account/all");
+		users = users.data;
+
+		console.log(users);
 		result = { status: "ok" };
 	} catch (e) {
 		console.log(e);
@@ -54,7 +72,7 @@ export const getStaticProps = async () => {
 	}
 
 	return {
-		props: { queryResult: { quizzes: quizzes, result: result } },
+		props: { queryResult: { users: users, quizzes: quizzes, result: result } },
 		revalidate: 20,
 	};
 };
