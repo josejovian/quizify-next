@@ -57,6 +57,7 @@ const FormTemplate = ({ title, formik, fields, callback }) => {
 									id={field.id}
 									name={field.id}
 									type={field.type}
+									validate={field.validate}
 								/>
 								{errors[field.id] && touched[field.id] ? (
 									<div className="mt-1 text-right text-red-500">
