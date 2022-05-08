@@ -22,18 +22,16 @@ const FormTemplate = ({ title, formik, fields, callback }) => {
 
 	async function onSubmit() {
 		setDisabled(true);
-		let result;
+		let result = { status: "fail" };
 		try {
 			result = await formik.onSubmit(collectValues());
-		} catch(e) {
+		} catch (e) {
 			setDisabled(false);
 		}
-
 		if (result.status === "ok") {
 			cb.success(result);
 			setModal(null);
 		} else cb.fail(result.status);
-		
 		setDisabled(false);
 	}
 
@@ -67,7 +65,11 @@ const FormTemplate = ({ title, formik, fields, callback }) => {
 								) : null}
 							</div>
 						))}
-						<Button isDisabled={disabled} className="mt-2" type="submit">
+						<Button
+							isDisabled={disabled}
+							className="mt-2"
+							type="submit"
+						>
 							Submit
 						</Button>
 					</Form>

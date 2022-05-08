@@ -6,34 +6,31 @@ const api = axios.create({
 	baseURL
 });
 
-export async function register({email, username, password}) {
-	let result = await api.post("/api/account/", {
+export async function register({ email, username, password }) {
+	let result = await api.post("/api/account/register", {
 		route: "register",
 		email: email,
 		username: username,
 		password: password,
 	});
 
-	switch(result.data.status) {
-		case "ok":
-			console.log("Register successful.");
-			break;
-		default:
-			console.log("Register failed.");
-			break;
+	if(result.status === 200 && result.data.status === "ok") {
+		console.log("Register successful.");
+	} else {
+		console.log("Register failed.");
 	}
 
 	return result.data;
 }
 
-export async function login({email, password}) {
-	let result = await api.post("/api/account/", {
+export async function login({ email, password }) {
+	let result = await api.post("/api/account/login", {
 		route: "login",
 		email: email,
 		password: password,
 	});
 
-	switch(result.data.status) {
+	switch (result.data.status) {
 		case "ok":
 			console.log("Login successful.");
 			break;
