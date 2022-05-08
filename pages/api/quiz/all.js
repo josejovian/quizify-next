@@ -9,7 +9,10 @@ export default async function handler(req, res) {
 
 	try {
 		result = await Quiz.model.find().populate("author");
-	} catch (e) {}
+	} catch (e) {
+		res.status(500).json({ status: "fail" });
+		return;
+	}
 
 	res.status(200).json(result);
 }
