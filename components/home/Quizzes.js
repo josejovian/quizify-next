@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MdPerson, MdAccessTimeFilled, MdQuestionAnswer } from "react-icons/md";
 import { connect } from "react-redux";
 import Button from "../generic/Button";
+import Card from "../generic/Card";
 import { mapDispatchToProps, mapStateToProps } from "../redux/setter";
 
 const Props = ({ children }) => {
@@ -18,7 +19,7 @@ const Quiz = ({ quiz, isOwner }) => {
 	const quizSpecialActionStyle = "mt-2 sm:ml-2 sm:mt-0";
 
 	return (
-		<div className="p-4 bg-gray-100 rounded-sm hover:shadow-md hover:bg-gray-200 transition-colors">
+		<Card>
 			<h2>{quiz.name}</h2>
 			<p>{quiz.desc}</p>
 			<hr className="mt-4" />
@@ -71,7 +72,7 @@ const Quiz = ({ quiz, isOwner }) => {
 					)}
 				</div>
 			</div>
-		</div>
+		</Card>
 	);
 };
 
