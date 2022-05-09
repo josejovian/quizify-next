@@ -45,7 +45,6 @@ function MyApp({ Component, pageProps }) {
 						<Modal />
 						<Navbar />
 						<Component {...pageProps} />
-						<Footer />
 					</DataContext.Provider>
 				</ModalContext.Provider>
 			</PersistGate>

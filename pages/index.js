@@ -10,6 +10,7 @@ import api from "../components/api";
 import Landing from "../components/home/Landing";
 import Quizzes from "../components/home/Quizzes";
 import { DataContext } from "./_app";
+import Footer from "../components/Footer";
 
 const Home = ({ loggedIn, queryResult }) => {
 	const { quizzes, result } = queryResult;
@@ -34,20 +35,26 @@ const Home = ({ loggedIn, queryResult }) => {
 	return (
 		<div
 			className={clsx(
-				"absolute top-0 w-screen h-screen",
-				"flex justify-center"
+				"absolute top-14 w-screen",
+				"flex flex-col"
 			)}
 		>
 			{loggedIn ? (
-				<Quizzes
-					quizzes={quizzes.filter(
-						(quiz) =>
-							quiz.isPublic ||
-							(!quiz.isPublic && quiz.author._id === loggedIn._id)
-					)}
-				/>
+				<>
+					<Quizzes
+						quizzes={quizzes.filter(
+							(quiz) =>
+								quiz.isPublic ||
+								(!quiz.isPublic && quiz.author._id === loggedIn._id)
+						)}
+					/>
+					<Footer />
+				</>
 			) : (
-				<Landing />
+				<>
+					<Landing />
+					<Footer className="fixed" />
+				</>
 			)}
 		</div>
 	);
