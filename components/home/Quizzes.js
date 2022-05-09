@@ -51,12 +51,16 @@ const Quiz = ({ quiz, isOwner }) => {
 					<Button>Solve</Button>
 					{isOwner && (
 						<>
-							<Button
-								className={quizSpecialActionStyle}
-								variant="secondary"
-							>
-								Edit
-							</Button>
+							<Link href={`/edit/${quiz._id}`}>
+								<a>
+									<Button
+										className={quizSpecialActionStyle}
+										variant="secondary"
+									>
+										Edit
+									</Button>
+								</a>
+							</Link>
 							<Button
 								className={quizSpecialActionStyle}
 								variant="danger"
@@ -83,7 +87,7 @@ const Quizzes = ({ quizzes, loggedIn }) => {
 	});
 
 	return (
-		<div className="pt-32">
+		<div className="pt-16">
 			<h1 className="text-center">All Quizzes</h1>
 			<div
 				className={clsx(

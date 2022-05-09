@@ -6,6 +6,7 @@ import clsx from "clsx";
 import Login from "./home/Login";
 import Register from "./home/Register";
 import { ModalContext } from "./generic/Modal";
+import Link from "next/link";
 
 const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 	const { setModal } = useContext(ModalContext);
@@ -59,14 +60,14 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 			links
 				.filter((link) => link.forGuests === (loggedIn === null))
 				.map((link) => (
-					<a
-						key={link.name}
-						className="ml-8"
-						href={link.link ?? "#"}
-						onClick={link.onClick ?? function () {}}
-					>
-						{link.name}
-					</a>
+					<Link key={link.name} href={link.link ?? "#"} passHref>
+						<a
+							className="ml-8"
+							onClick={link.onClick ?? function () {}}
+						>
+							{link.name}
+						</a>
+					</Link>
 				))
 		);
 	}, [loggedIn]);
@@ -88,9 +89,11 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 				"bg-zinc-700 text-white z-20"
 			)}
 		>
-			<a href="/">
-				<span className="font-semibold">QUIZIFY</span>
-			</a>
+			<Link href="/" passHref>
+				<a>
+					<span className="font-semibold">QUIZIFY</span>
+				</a>
+			</Link>
 			<div className="flex">{elements}</div>
 		</div>
 	);
