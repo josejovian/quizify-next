@@ -1,17 +1,13 @@
 import clsx from "clsx";
 
 const Button = ({
-	id,
 	children,
 	variant = "primary",
-	onClick,
-	isDisabled = false,
 	className,
-	type,
+	...rest
 }) => {
 	return (
 		<button
-			id={id}
 			className={clsx(
 				"px-4 py-2 shadow-md",
 				"transition-colors duration-100",
@@ -35,9 +31,7 @@ const Button = ({
 				],
 				className
 			)}
-			onClick={onClick}
-			type={type}
-			disabled={isDisabled}
+			{...rest}
 		>
 			{children}
 		</button>

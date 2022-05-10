@@ -1,6 +1,15 @@
-const Card = ({ children }) => {
+import clsx from "clsx";
+
+const Card = ({ className, children, ...rest}) => {
 	return (
-		<div className="p-4 bg-gray-100 rounded-sm hover:shadow-md hover:bg-gray-200 transition-colors">
+		<div
+			className={clsx(
+				"p-4 bg-gray-100 rounded-sm transition-colors cursor-pointer",
+				"hover:shadow-md hover:bg-gray-200",
+				className
+			)}
+			{...rest}
+		>
 			{children}
 		</div>
 	);
