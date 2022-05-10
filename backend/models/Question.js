@@ -6,10 +6,10 @@ const questionSchema = new mongoose.Schema({
 		ref: 'Quiz'
 	},
 	title: String,
-	type: String,
+	type: Number,
 	choices: [ Object ],
+	ignoreCase: Boolean,
 	correct: String,
-	duration: Number,
 	points: Number,
 });
 
