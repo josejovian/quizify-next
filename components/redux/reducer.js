@@ -1,5 +1,7 @@
 const initialState = {
 	loggedIn: null,
+	quiz: null,
+	question: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -13,6 +15,16 @@ export const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				loggedIn: null,
+			};
+		case "quizSet":
+			return {
+				...state,
+				quiz: action.quiz,
+			};
+		case "questionSet":
+			return {
+				...state,
+				question: action.question,
 			};
 		default:
 			return state;

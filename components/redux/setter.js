@@ -12,13 +12,32 @@ export function logoutUser() {
 	};
 }
 
+export function setQuiz(quiz) {
+	return {
+		type: "quizSet",
+		quiz: quiz
+	};
+}
+
+export function setQuestion(question) {
+	return {
+		type: "questionSet",
+		question: question
+	};
+}
+
+
 export function mapStateToProps(state) {
 	return {
 		loggedIn: state.loggedIn,
+		quiz: state.quiz,
+		question: state.question,
 	};
 }
 
 export const mapDispatchToProps = {
 	loginUser,
 	logoutUser,
+	setQuiz,
+	setQuestion,
 };
