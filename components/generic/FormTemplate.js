@@ -48,7 +48,7 @@ const FormTemplate = ({ title, formik, fields, callback }) => {
 						{fields.map((field) => (
 							<div key={field.id} className="flex flex-col mb-4">
 								<label
-									className="mb-1 uppercase text-sm text-slate-400 tracking-widest font-semibold"
+									className="head-subtle"
 									htmlFor={field.id}
 								>
 									{field.title}
