@@ -35,8 +35,13 @@ const Home = ({ loggedIn, queryResult }) => {
 	return (
 		<div
 			className={clsx(
-				"absolute top-14 w-screen",
-				"flex flex-col"
+				"absolute w-screen",
+				"flex flex-col",
+				[ !loggedIn && [
+					'h-screen justify-center items-center',
+				], loggedIn && [
+					'top-14'
+				]]
 			)}
 		>
 			{loggedIn ? (
