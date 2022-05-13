@@ -105,11 +105,12 @@
 		@apply w-full;
 	}
 
+	/* Source: https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header */
 	.question-index::before {
 		content: "";
 		display: block;
-		height: 6rem;
-		margin-top: -6rem;
+		height: 2rem;
+		margin-top: -2rem;
 		visibility: hidden;
 	}
 }
