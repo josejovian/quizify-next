@@ -60,6 +60,13 @@
 	hr {
 		@apply border-gray-300;
 	}
+
+	.question-content img {
+		width: min-content;
+		height: auto;
+		margin: 0 auto;
+		padding: 1rem 0;
+	}
 }
 @tailwind base;
 
@@ -70,16 +77,40 @@
 		object-fit: cover !important;
 	}
 
-	.modal-form-wrapper input {
-		@apply bg-slate-200 px-4 py-2 transition-colors duration-100;
+	:is(input, select) {
+		@apply bg-slate-50 px-4 py-2 transition-colors duration-100;
 	}
 
-	.modal-form-wrapper input:focus {
-		@apply bg-slate-300;
+	select {
+		@apply h-10;
+	}
+
+	:is(input, select):focus {
+		/* @apply bg-slate-200; */
 	}
 
 	.subtle {
 		@apply text-sm text-gray-800;
+	}
+
+	.head-subtle {
+		@apply uppercase text-sm text-slate-400 tracking-widest font-semibold mb-2;
+	}
+
+	.quiz-port {
+		width: calc(100vw - 20px);
+	}
+
+	.question-edit-actions :is(input, select) {
+		@apply w-full;
+	}
+
+	.question-index::before {
+		content: "";
+		display: block;
+		height: 6rem;
+		margin-top: -6rem;
+		visibility: hidden;
 	}
 }
 @tailwind components;
