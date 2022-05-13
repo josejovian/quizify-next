@@ -33,7 +33,7 @@ const Question = ({
 	return (
 		<Card
 			className={clsx("mb-8", [
-				active && "bg-slate-200 shadow-md cursor-",
+				active && "bg-slate-200 shadow-md cursor-default",
 			])}
 			{...rest}
 		>
