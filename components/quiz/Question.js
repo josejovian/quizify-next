@@ -50,7 +50,7 @@ const Question = ({
 					{choices.map((choice, index) => {
 						const identifier = `choice-${_id}-${choice}`;
 						return (
-							<div className="flex flex-row items-center">
+							<div key={identifier} className="flex flex-row items-center">
 								<input
 									className="mr-4 my-2 w-6 h-6"
 									type="radio"
@@ -58,7 +58,7 @@ const Question = ({
 									name={`choice-${_id}`}
 									value={choice}
 								/>
-								<label for={identifier}>{choice}</label>
+								<label htmlFor={identifier}>{choice}</label>
 							</div>
 						);
 					})}
