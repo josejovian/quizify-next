@@ -30,6 +30,38 @@ const Question = ({
 }) => {
 	const active = question === _id;
 
+	function saveScore(value) {
+		value = parseInt(value);
+
+		if(value < 0) value = 0;
+		else if(value > 100) value = 100;
+
+		const tempQuestions = quiz.questions;
+		tempQuestions[_id].points = parseInt(value);
+
+		const input = document.getElementById(`score-${_id}`);
+		input.value = value;
+
+		setQuiz({
+			...quiz,
+			questions: tempQuestions,
+			changes: quiz.changes + 1 || 0
+		});
+	}
+
+	function saveType(value) {
+		console.log(value);
+		
+		const tempQuestions = quiz.questions;
+		tempQuestions[_id].type = parseInt(value);
+
+		setQuiz({
+			...quiz,
+			questions: tempQuestions,
+			changes: quiz.changes + 1 || 0
+		});
+	}
+
 	return (
 		<Card
 			className={clsx("mb-8", [
@@ -70,14 +102,14 @@ const Question = ({
 					<div className="question-edit-actions flex flex-col md:flex-row">
 						<div className="flex flex-col mb-4 md:m-0 md:mr-4 w-full">
 							<span className="head-subtle">Type</span>
-							<select defaultValue={type}>
+							<select onChange={(e) => saveType(e.target.value)} defaultValue={type}>
 								<option value="0">Short Answer</option>
 								<option value="1">Multiple Choice</option>
 							</select>
 						</div>
 						<div className="flex flex-col shrink w-full">
 							<span className="head-subtle">Score</span>
-							<input type="number" defaultValue={points} />
+							<input id={`score-${_id}`} onChange={(e) => saveScore(e.target.value)} type="number" defaultValue={points} />
 						</div>
 					</div>
 				</div>
