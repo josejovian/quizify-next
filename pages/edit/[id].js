@@ -17,8 +17,16 @@ const Edit = ({ quiz, setQuiz, loggedIn, queryResult }) => {
 
 	useEffect(() => {
 		if(queryResult.quiz) {
-			console.log(queryResult.quiz);
-			setQuiz(queryResult.quiz);
+			let dictionary = {};
+
+			queryResult.quiz.questions.forEach((question) => {
+				dictionary[question._id] = question;
+			});
+
+			setQuiz({
+				...queryResult.quiz,
+				questions: dictionary,
+			});
 		}
 		
 	}, [ queryResult ]);
