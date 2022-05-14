@@ -6,7 +6,7 @@ import { QuizContext } from "../../pages/edit/[id]";
 import Button from "../generic/Button";
 import Card from "../generic/Card";
 import { mapDispatchToProps, mapStateToProps } from "../redux/setter";
-import { Markup } from 'interweave';
+import { Markup } from "interweave";
 
 const Question = ({
 	question,
@@ -46,16 +46,23 @@ const Question = ({
 			{type === 0 ? (
 				<input className="mt-4" type="text" defaultValue={correct} />
 			) : (
-				choices.map((choice, index) => {
-					return (
-						<input
-							type="radio"
-							id={choice}
-							name={`choice-${_id}-${index}`}
-							value={choice}
-						/>
-					);
-				})
+				<div className="mt-4 flex flex-col">
+					{choices.map((choice, index) => {
+						const identifier = `choice-${_id}-${choice}`;
+						return (
+							<div className="flex flex-row items-center">
+								<input
+									className="mr-4 my-2 w-6 h-6"
+									type="radio"
+									id={identifier}
+									name={`choice-${_id}`}
+									value={choice}
+								/>
+								<label for={identifier}>{choice}</label>
+							</div>
+						);
+					})}
+				</div>
 			)}
 			{active && (
 				<div>
