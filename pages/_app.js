@@ -15,6 +15,7 @@ import "../styles/globals.css";
 const persistConfig = {
 	key: "root",
 	storage,
+	whitelist: ['loggedIn']
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);
