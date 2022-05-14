@@ -4,7 +4,7 @@ import Card from "../generic/Card";
 import Question from "../quiz/Question";
 import { mapDispatchToProps, mapStateToProps } from "../redux/setter";
 
-const Main = ({ setQuestion, name, desc, questions }) => {
+const Main = ({ setQuestion, name, desc, questions=[] }) => {
 	return (
 		<div className={clsx("w-4/6 p-16")}>
 			<h1>{name}</h1>
