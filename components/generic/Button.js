@@ -4,15 +4,18 @@ const Button = ({
 	children,
 	variant = "primary",
 	className,
+	icon,
 	...rest
 }) => {
 	return (
 		<button
 			className={clsx(
-				"px-4 py-2 shadow-md",
+				"shadow-md",
 				"transition-colors duration-100",
 				"disabled:cursor-not-allowed disabled:bg-opacity-50",
 				[
+					!icon && "px-4 py-2",
+					icon && "w-10 h-10 flex flex-col items-center justify-center p-0",
 					variant === "primary" && [
 						`bg-blue-600 text-white`,
 						`hover:bg-blue-700`,
@@ -33,7 +36,7 @@ const Button = ({
 			)}
 			{...rest}
 		>
-			{children}
+			{icon || children}
 		</button>
 	);
 };
