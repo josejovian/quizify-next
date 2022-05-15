@@ -3,6 +3,10 @@
 	src: url("../public/fonts/Inter-VariableFont_slnt,wght.ttf");
 }
 
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';
+
 @layer base {
 	/* Major */
 	html,
@@ -101,8 +105,20 @@
 		width: calc(100vw - 20px);
 	}
 
+	.question-active {
+		width: calc(100% - (64px));
+	}
+
 	.question-edit-actions :is(input, select) {
 		@apply w-full;
+	}
+
+	#editor {
+		background: white!important;
+	}
+
+	#editor svg {
+		height: max-content;
 	}
 
 	/* Source: https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header */
