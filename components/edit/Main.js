@@ -9,7 +9,7 @@ const Main = ({ setQuestion, quiz }) => {
 
 	return ([
 		quiz && (
-			<div key="quiz" className={clsx("w-4/6 p-16")}>
+			<div key="quiz" className={clsx("absolute right-0 w-4/6 p-16")}>
 				<h1>{quiz.name}</h1>
 				<p>{quiz.desc}</p>
 				<hr className="my-8" />
@@ -28,8 +28,8 @@ const Main = ({ setQuestion, quiz }) => {
 			</div>
 		),
 		!quiz && [
-			<>
-			</>
+			<div key="no-quiz">
+			</div>
 		]
 	]);
 };

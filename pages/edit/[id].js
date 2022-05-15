@@ -38,8 +38,8 @@ const Edit = ({ quiz, setQuiz, loggedIn, queryResult }) => {
 				"absolute top-0 pt-14",
 			)}
 		>
-			<Main {...quiz} />
 			<Side {...quiz} />
+			<Main {...quiz} />
 		</div>
 	);
 };
