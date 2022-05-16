@@ -17,7 +17,8 @@ const Question = ({
 	questions, // for redux
 	setQuestions, // for redux
 }) => {
-	const { _id, title, type, choices, correctChoice, correct, points } = _question;
+	const { _id, title, type, choices, correctChoice, correct, points } =
+		_question;
 
 	const [quill, setQuill] = useState(null);
 
@@ -36,21 +37,24 @@ const Question = ({
 		},
 	];
 
-	function updateQuestion(object, id=_id) {
+	function updateQuestion(object, id = _id) {
 		setQuestions({
 			...questions,
 			[_id]: {
 				...questions[_id],
-				...object
-			}
+				...object,
+			},
 		});
 	}
 
 	function cleanEditor() {
 		const editor = document.getElementById("editor");
-		updateQuestion({
-			title: quill.value.root.innerHTML
-		}, quill.key);
+		updateQuestion(
+			{
+				title: quill.value.root.innerHTML,
+			},
+			quill.key
+		);
 
 		editor.classList.remove("ql-container");
 		editor.classList.remove("ql-snow");
@@ -101,7 +105,7 @@ const Question = ({
 
 		const toolbars = document.querySelectorAll("ql-toolbar");
 
-		while(toolbars.length > 1) {
+		while (toolbars.length > 1) {
 			console.log("Remove");
 			let element = toolbars.shift();
 			element.remove();
@@ -116,7 +120,7 @@ const Question = ({
 				cleanEditor();
 			}
 
-			if(!active) return;
+			if (!active) return;
 
 			setTimeout(() => {
 				setupEditor();
@@ -134,7 +138,7 @@ const Question = ({
 		input.value = value;
 
 		updateQuestion({
-			points: value
+			points: value,
 		});
 	}
 
@@ -142,7 +146,7 @@ const Question = ({
 		value = parseInt(value);
 
 		updateQuestion({
-			type: value
+			type: value,
 		});
 	}
 
@@ -162,9 +166,9 @@ const Question = ({
 			)}
 			<Card
 				className={clsx("mb-8", [
-					active &&
-						"question-active ml-8 bg-slate-200 shadow-md cursor-default",
-					!active && "w-full",
+					active
+						? "question-active ml-8 bg-slate-200 shadow-md cursor-default"
+						: "w-full",
 				])}
 				onClick={onClick}
 			>
