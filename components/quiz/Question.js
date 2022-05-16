@@ -10,27 +10,15 @@ import { Markup } from "interweave";
 import { MdImage, MdDelete } from "react-icons/md";
 
 const Question = ({
-	question = null,
 	index,
-	_id,
-	title,
-	choices,
-	correct,
-	type,
-	points,
-	ignoreCase,
-	loggedIn,
-	quiz,
-	__v,
-	loginUser,
-	setLogin,
-	setQuiz,
-	questions,
-	setQuestions,
-	setQuestion,
-	logoutUser,
 	onClick,
+	_question, // for question passed from Main
+	question = null, // for redux
+	questions, // for redux
+	setQuestions, // for redux
 }) => {
+	const { _id, title, type, choices, correctChoice, correct, points } = _question;
+
 	const [quill, setQuill] = useState(null);
 
 	const active = question === _id;

@@ -19,7 +19,7 @@ const Main = ({ questions, setQuestions, setQuestion, quiz }) => {
 								key={question._id}
 								index={index + 1}
 								onClick={() => setQuestion(question._id)}
-								{...question}
+								_question={question}
 							/>
 						);
 					})
