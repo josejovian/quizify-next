@@ -150,6 +150,14 @@ const Question = ({
 		});
 	}
 
+	function saveAnswer(value) {
+		const temp = correct;
+		temp[type] = value;
+		updateQuestion({
+			correct: temp,
+		});
+	}
+
 	return (
 		<div className="flex flex-row">
 			{active && (
@@ -195,7 +203,7 @@ const Question = ({
 				<div className="flex flex-col mt-4 md:mr-4 w-full">
 					<span className="head-subtle">Answer</span>
 					{type === 0 ? (
-						<input type="text" defaultValue={correct} />
+						<input type="text" defaultValue={correct[0]} onChange={(e) => saveAnswer(e.target.value)} />
 					) : (
 						<div className="flex flex-col">
 							{choices.map((choice, index) => {
@@ -211,6 +219,8 @@ const Question = ({
 											id={identifier}
 											name={`choice-${_id}`}
 											value={choice}
+											checked={choice === correct[1]}
+											onChange={(e) => saveAnswer(e.target.value)}
 										/>
 										<label htmlFor={identifier}>
 											{choice}
