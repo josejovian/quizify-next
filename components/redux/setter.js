@@ -26,12 +26,19 @@ export function setQuestion(question) {
 	};
 }
 
+export function setQuestions(questions) {
+	return {
+		type: "questionsSet",
+		questions: questions
+	};
+}
 
 export function mapStateToProps(state) {
 	return {
 		loggedIn: state.loggedIn,
 		quiz: state.quiz,
 		question: state.question,
+		questions: state.questions,
 	};
 }
 
@@ -40,4 +47,5 @@ export const mapDispatchToProps = {
 	logoutUser,
 	setQuiz,
 	setQuestion,
+	setQuestions,
 };
