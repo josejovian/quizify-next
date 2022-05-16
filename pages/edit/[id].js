@@ -13,7 +13,7 @@ import { DataContext } from ".././_app";
 import Side from "../../components/edit/Side";
 import Main from "../../components/edit/Main";
 
-const Edit = ({ quiz, setQuiz, loggedIn, queryResult }) => {
+const Edit = ({ quiz, setQuiz, setQuestions, loggedIn, queryResult }) => {
 
 	useEffect(() => {
 		if(queryResult.quiz) {
@@ -25,8 +25,10 @@ const Edit = ({ quiz, setQuiz, loggedIn, queryResult }) => {
 
 			setQuiz({
 				...queryResult.quiz,
-				questions: dictionary,
+				questions: null,
 			});
+
+			setQuestions(dictionary);
 		}
 		
 	}, [ queryResult ]);
