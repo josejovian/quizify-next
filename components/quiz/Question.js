@@ -10,7 +10,7 @@ import { Markup } from "interweave";
 import { MdImage, MdDelete } from "react-icons/md";
 
 const Question = ({
-	question=null,
+	question = null,
 	index,
 	_id,
 	title,
@@ -25,9 +25,11 @@ const Question = ({
 	loginUser,
 	setLogin,
 	setQuiz,
+	questions,
+	setQuestions,
 	setQuestion,
 	logoutUser,
-	...rest
+	onClick,
 }) => {
 	const [quill, setQuill] = useState(null);
 
@@ -46,54 +48,91 @@ const Question = ({
 		},
 	];
 
-	useEffect(() => {
-		if (typeof window === 'object') {
-			const Quill = typeof window === 'object' ? require('quill') : () => false;
-			const wrapper = document.getElementById("editor-wrapper");
+	function updateQuestion(object, id=_id) {
+		setQuestions({
+			...questions,
+			[_id]: {
+				...questions[_id],
+				...object
+			}
+		});
+	}
 
-			if(quill || wrapper) {
-				const editor = document.createElement("div");
-				editor.id = "editor";
+	function cleanEditor() {
+		const editor = document.getElementById("editor");
+		updateQuestion({
+			title: quill.value.root.innerHTML
+		}, quill.key);
 
-				while(wrapper && wrapper.lastChild) {
-					wrapper.removeChild(wrapper.lastChild);
+		editor.classList.remove("ql-container");
+		editor.classList.remove("ql-snow");
+		while (editor && editor.lastChild) {
+			editor.removeChild(editor.lastChild);
+		}
+
+		const toolbars = document.querySelectorAll("ql-toolbar");
+		toolbars.forEach((tb) => tb.remove());
+	}
+
+	function setupEditor() {
+		// https://github.com/zenoamaro/react-quill/issues/122
+		const Quill =
+			typeof window === "object" ? require("quill") : () => false;
+
+		let temp = new Quill(`#editor`, {
+			modules: {
+				toolbar: [
+					["bold", "italic", "underline", "strike"],
+					[{ list: "ordered" }, { list: "bullet" }],
+					[{ script: "sub" }, { script: "super" }],
+					["link"],
+				],
+			},
+			theme: "snow",
+		});
+
+		if (!temp.container) {
+			return;
+		}
+
+		temp.root.innerHTML = title;
+
+		// https://github.com/quilljs/quill/issues/1184
+		temp.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
+			let ops = [];
+			delta.ops.forEach((op) => {
+				if (op.insert && typeof op.insert === "string") {
+					ops.push({
+						insert: op.insert,
+					});
 				}
+			});
+			delta.ops = ops;
+			return delta;
+		});
 
-				wrapper.appendChild(editor);
+		const toolbars = document.querySelectorAll("ql-toolbar");
+
+		while(toolbars.length > 1) {
+			console.log("Remove");
+			let element = toolbars.shift();
+			element.remove();
+		}
+
+		setQuill({ key: _id, value: temp });
+	}
+
+	useEffect(() => {
+		if (typeof window === "object" && question) {
+			if (!active && quill) {
+				cleanEditor();
 			}
 
-			let temp = (new Quill(`#editor`, {
-				modules: {
-					toolbar: [
-						['bold', 'italic', 'underline', 'strike'],
-						[{ 'list': 'ordered'}, { 'list': 'bullet' }],
-						[{ 'script': 'sub'}, { 'script': 'super' }],
-						['link']
-					],
-				},
-				theme: 'snow'
-			}));
+			if(!active) return;
 
-			temp.root.innerHTML = title;
-
-			/* 
-				Source:
-				https://github.com/quilljs/quill/issues/1184
-			*/
-			temp.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
-				let ops = []
-				delta.ops.forEach(op => {
-					if(op.insert && typeof op.insert === 'string') {
-						ops.push({
-							insert: op.insert
-						})
-					}
-				})
-				delta.ops = ops
-				return delta
-			});
-
-			setQuill(temp);
+			setTimeout(() => {
+				setupEditor();
+			}, 100);
 		}
 	}, [active]);
 
@@ -103,29 +142,19 @@ const Question = ({
 		if (value < 0) value = 0;
 		else if (value > 100) value = 100;
 
-		const tempQuestions = quiz.questions;
-		tempQuestions[_id].points = parseInt(value);
-
 		const input = document.getElementById(`score-${_id}`);
 		input.value = value;
 
-		setQuiz({
-			...quiz,
-			questions: tempQuestions,
-			changes: quiz.changes + 1 || 0,
+		updateQuestion({
+			points: value
 		});
 	}
 
 	function saveType(value) {
-		console.log(value);
+		value = parseInt(value);
 
-		const tempQuestions = quiz.questions;
-		tempQuestions[_id].type = parseInt(value);
-
-		setQuiz({
-			...quiz,
-			questions: tempQuestions,
-			changes: quiz.changes + 1 || 0,
+		updateQuestion({
+			type: value
 		});
 	}
 
@@ -149,57 +178,57 @@ const Question = ({
 						"question-active ml-8 bg-slate-200 shadow-md cursor-default",
 					!active && "w-full",
 				])}
-				{...rest}
+				onClick={onClick}
 			>
 				<h2 className="question-index" id={`question-${index}`}>
 					Question {index}
 				</h2>
-				<div className="question-content" id={_id}>
-					{[
-						!active && (
-							<Markup
-								key="question-content-inactive"
-								content={title}
-							/>
-						),
-						active && (
-							<div id="editor-wrapper" className="mt-4">
-								<div
-									key="question-content-active"
-									id="editor"
-								></div>
-							</div>
-						),
-					]}
-				</div>
-				{type === 0 ? (
-					<input
-						className="mt-4"
-						type="text"
-						defaultValue={correct}
+				<div className="question-content">
+					<Markup
+						id={_id}
+						className={clsx(active && "hidden")}
+						key="question-content-inactive"
+						content={title}
 					/>
-				) : (
-					<div className="mt-4 flex flex-col">
-						{choices.map((choice, index) => {
-							const identifier = `choice-${_id}-${choice}`;
-							return (
-								<div
-									key={identifier}
-									className="flex flex-row items-center"
-								>
-									<input
-										className="mr-4 my-2 w-6 h-6"
-										type="radio"
-										id={identifier}
-										name={`choice-${_id}`}
-										value={choice}
-									/>
-									<label htmlFor={identifier}>{choice}</label>
-								</div>
-							);
-						})}
-					</div>
-				)}
+					{active && (
+						<div
+							key="question-content-active"
+							id="editor-wrapper"
+							className="mt-4"
+						>
+							<div id="editor"></div>
+						</div>
+					)}
+				</div>
+				<div className="flex flex-col mt-4 md:mr-4 w-full">
+					<span className="head-subtle">Answer</span>
+					{type === 0 ? (
+						<input type="text" defaultValue={correct} />
+					) : (
+						<div className="flex flex-col">
+							{choices.map((choice, index) => {
+								const identifier = `choice-${_id}-${choice}`;
+								return (
+									<div
+										key={identifier}
+										className="flex flex-row items-center"
+									>
+										<input
+											className="mr-4 my-2 w-6 h-6"
+											type="radio"
+											id={identifier}
+											name={`choice-${_id}`}
+											value={choice}
+										/>
+										<label htmlFor={identifier}>
+											{choice}
+										</label>
+									</div>
+								);
+							})}
+						</div>
+					)}
+				</div>
 				{active && (
 					<div>
 						<hr className="my-4" />
