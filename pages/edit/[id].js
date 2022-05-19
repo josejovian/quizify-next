@@ -47,7 +47,7 @@ const Edit = ({ quiz, setQuiz, setQuestions, loggedIn, queryResult }) => {
 };
 
 export const getServerSideProps = async (req) => {
-	let result, quiz;
+	let result, quiz = null;
 
 	try {
 		quiz = await api.get(`/api/quiz/${req.query.id}`);
