@@ -8,6 +8,9 @@ import Card from "../generic/Card";
 import { mapDispatchToProps, mapStateToProps } from "../redux/setter";
 import { Markup } from "interweave";
 import { MdImage, MdDelete } from "react-icons/md";
+import { ModalContext } from "../generic/Modal";
+import UploadThumbnail from "../edit/UploadThumbnail";
+import Picture from "../generic/Picture";
 
 const Question = ({
 	index,
@@ -17,9 +20,17 @@ const Question = ({
 	questions, // for redux
 	setQuestions, // for redux
 }) => {
-	const { _id, title, type, choices, correctChoice, correct, points } =
-		_question;
+	const {
+		_id,
+		title,
+		type,
+		choices,
+		thumbnail,
+		correct,
+		points,
+	} = _question;
 
+	const { setModal } = useContext(ModalContext);
 	const [quill, setQuill] = useState(null);
 
 	const active = question === _id;
@@ -28,11 +39,13 @@ const Question = ({
 		{
 			name: "image",
 			variant: "secondary",
+			onClick: () => setModal(<UploadThumbnail index={index} thumbnail={thumbnail} saveThumbnail={saveThumbnail} />),
 			icon: <MdImage />,
 		},
 		{
 			name: "delete",
 			variant: "danger",
+			onClick: () => {},
 			icon: <MdDelete />,
 		},
 	];
@@ -158,18 +171,27 @@ const Question = ({
 		});
 	}
 
+	function saveThumbnail(value) {
+		updateQuestion({
+			thumbnail: value,
+		});
+	}
+
 	return (
 		<div className="flex flex-row">
 			{active && (
 				<div className="flex flex-col">
-					{actions.map(({ name, variant, icon }, index) => (
-						<Button
-							key={`question-action-${name}`}
-							variant={variant}
-							className={clsx(index > 0 && "mt-4")}
-							icon={icon}
-						/>
-					))}
+					{actions.map(
+						({ name, purpose, variant, icon, onClick }, index) => (
+							<Button
+								className={clsx(index > 0 && "mt-4")}
+								key={`question-action-${name}`}
+								variant={variant}
+								onClick={onClick}
+								icon={icon}
+							/>
+						)
+					)}
 				</div>
 			)}
 			<Card
@@ -183,7 +205,17 @@ const Question = ({
 				<h2 className="question-index" id={`question-${index}`}>
 					Question {index}
 				</h2>
-				<div className="question-content">
+				<div className="question-content flex flex-col">
+					{thumbnail && (
+						<div className="question-thumbnail my-4">
+							<Picture
+								src={thumbnail + "a"}
+								width="1280"
+								height="720"
+								fallback="/fallback-thumbnail.webp"
+							/>
+						</div>
+					)}
 					<Markup
 						id={_id}
 						className={clsx(active && "hidden")}
@@ -194,7 +226,6 @@ const Question = ({
 						<div
 							key="question-content-active"
 							id="editor-wrapper"
-							className="mt-4"
 						>
 							<div id="editor"></div>
 						</div>
@@ -203,7 +234,11 @@ const Question = ({
 				<div className="flex flex-col mt-4 md:mr-4 w-full">
 					<span className="head-subtle">Answer</span>
 					{type === 0 ? (
-						<input type="text" defaultValue={correct[0]} onChange={(e) => saveAnswer(e.target.value)} />
+						<input
+							type="text"
+							defaultValue={correct[0]}
+							onChange={(e) => saveAnswer(e.target.value)}
+						/>
 					) : (
 						<div className="flex flex-col">
 							{choices.map((choice, index) => {
@@ -220,7 +255,9 @@ const Question = ({
 											name={`choice-${_id}`}
 											value={choice}
 											checked={choice === correct[1]}
-											onChange={(e) => saveAnswer(e.target.value)}
+											onChange={(e) =>
+												saveAnswer(e.target.value)
+											}
 										/>
 										<label htmlFor={identifier}>
 											{choice}

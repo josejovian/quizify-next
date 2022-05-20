@@ -5,6 +5,7 @@ const Button = ({
 	variant = "primary",
 	className,
 	icon,
+	isDisabled,
 	...rest
 }) => {
 	return (

@@ -6,11 +6,16 @@ const questionSchema = new mongoose.Schema({
 		ref: 'Quiz'
 	},
 	title: String,
+	thumbnail: String,
 	type: Number,
-	choices: [ Object ],
-	ignoreCase: Boolean,
-	correct: String,
 	points: Number,
+	correct: [ String ],
+
+	/* Multiple Choice */
+	choices: [ Object ],
+
+	/* Short Answer */
+	ignoreCase: Boolean,
 });
 
 module.exports = {
