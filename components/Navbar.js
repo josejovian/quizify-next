@@ -60,14 +60,16 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 			links
 				.filter((link) => link.forGuests === (loggedIn === null))
 				.map((link) => (
-					<Link key={link.name} href={link.link ?? "#"} passHref>
-						<a
-							className="ml-8"
-							onClick={link.onClick ?? function () {}}
-						>
-							{link.name}
-						</a>
-					</Link>
+					<li key={link.name}>
+						<Link href={link.link ?? "#"} passHref>
+							<a
+								className="ml-8"
+								onClick={link.onClick ?? function () {}}
+							>
+								{link.name}
+							</a>
+						</Link>
+					</li>
 				))
 		);
 	}, [loggedIn]);
@@ -81,7 +83,7 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 	}
 
 	return (
-		<div
+		<nav
 			className={clsx(
 				"pageify",
 				"fixed top-0 left-0 py-4",
@@ -94,8 +96,8 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 					<span className="font-semibold">QUIZIFY</span>
 				</a>
 			</Link>
-			<div className="flex">{elements}</div>
-		</div>
+			<ul className="flex">{elements}</ul>
+		</nav>
 	);
 };
 

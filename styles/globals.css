@@ -65,6 +65,10 @@
 		@apply border-gray-300;
 	}
 
+	a {
+		@apply text-blue-500 hover:text-blue-700;
+	}
+
 	.question-content img {
 		width: min-content;
 		height: auto;
@@ -75,6 +79,10 @@
 @tailwind base;
 
 @layer components {
+	nav a {
+		@apply text-inherit;
+	}
+
 	#landing-background img {
 		width: 100% !important;
 		height: auto !important;
