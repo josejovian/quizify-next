@@ -3,6 +3,7 @@ const initialState = {
 	quiz: null,
 	question: null,
 	questions: null,
+	changes: [],
 };
 
 export const reducer = (state = initialState, action) => {
@@ -31,6 +32,11 @@ export const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				questions: action.questions,
+			};
+		case "changesSet":
+			return {
+				...state,
+				changes: action.changes,
 			};
 		default:
 			return state;

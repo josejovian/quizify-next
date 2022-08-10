@@ -48,4 +48,56 @@ export async function login({ email, password }) {
 	return result.data;
 }
 
+export async function updateQuiz(id, {name, desc}) {
+	let result = await api.post(`/api/quiz/update/${id}`, {
+		name: name,
+		desc: desc,
+	});
+
+	switch (result.data.status) {
+		case "ok":
+			console.log("Update successful.");
+			break;
+		default:
+			console.log("Update failed.");
+			break;
+	}
+
+	return result.data;
+}
+
+export async function updateQuizQuestions(id, updatedIDs, updatedQuestions) {
+	let result = await api.post(`/api/quiz/question/update/${id}`, {
+		updatedQuestions: updatedQuestions,
+		updatedIDs: updatedIDs
+	});
+
+	switch (result.data.status) {
+		case "ok":
+			console.log("Update successful.");
+			break;
+		default:
+			console.log("Update failed.");
+			break;
+	}
+	
+	return result.data;
+}
+
+export async function createQuizQuestion(id) {
+	let result = await api.post(`/api/quiz/question/new/${id}`);
+
+	switch (result.data.status) {
+		case "ok":
+			console.log("Update successful.");
+			break;
+		default:
+			console.log("Update failed.");
+			break;
+	}
+	
+	return result.data;
+}
+
+
 export default api;

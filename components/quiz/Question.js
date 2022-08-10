@@ -7,7 +7,7 @@ import Button from "../generic/Button";
 import Card from "../generic/Card";
 import { mapDispatchToProps, mapStateToProps } from "../redux/setter";
 import { Markup } from "interweave";
-import { MdImage, MdDelete } from "react-icons/md";
+import { MdImage, MdDelete, MdClose } from "react-icons/md";
 import { ModalContext } from "../generic/Modal";
 import UploadThumbnail from "../edit/UploadThumbnail";
 import Picture from "../generic/Picture";
@@ -18,17 +18,13 @@ const Question = ({
 	_question, // for question passed from Main
 	question = null, // for redux
 	questions, // for redux
+	setQuestion, // for redux
 	setQuestions, // for redux
+	changes, // for redux
+	setChanges, // for redux
+	purpose,
 }) => {
-	const {
-		_id,
-		title,
-		type,
-		choices,
-		thumbnail,
-		correct,
-		points,
-	} = _question;
+	const { _id, title, type, choices, thumbnail, correct, points } = _question;
 
 	const { setModal } = useContext(ModalContext);
 	const [quill, setQuill] = useState(null);
@@ -37,9 +33,24 @@ const Question = ({
 
 	const actions = [
 		{
+			name: "close",
+			variant: "primary",
+			onClick: () => {
+				setQuestion(null), cleanEditor();
+			},
+			icon: <MdClose />,
+		},
+		{
 			name: "image",
 			variant: "secondary",
-			onClick: () => setModal(<UploadThumbnail index={index} thumbnail={thumbnail} saveThumbnail={saveThumbnail} />),
+			onClick: () =>
+				setModal(
+					<UploadThumbnail
+						index={index}
+						thumbnail={thumbnail}
+						saveThumbnail={saveThumbnail}
+					/>
+				),
 			icon: <MdImage />,
 		},
 		{
@@ -51,6 +62,10 @@ const Question = ({
 	];
 
 	function updateQuestion(object, id = _id) {
+		if (!changes.includes(_id)) {
+			changes.push(_id);
+		}
+
 		setQuestions({
 			...questions,
 			[_id]: {
@@ -177,22 +192,44 @@ const Question = ({
 		});
 	}
 
+	function saveChoice(value, idx) {
+		const _choices = [...choices];
+
+		_choices[idx] = value;
+		console.log(_choices);
+
+		updateQuestion({
+			choices: _choices,
+		});
+	}
+
+	function deleteChoice(idx) {
+		updateQuestion({
+			choices: choices.filter((choice, index) => index !== idx),
+		});
+	}
+
+	function addChoice() {
+		const _choices = [...choices, "New Choice"];
+
+		updateQuestion({
+			choices: _choices,
+		});
+	}
+
 	return (
-		<div className="flex flex-row">
-			{active && (
-				<div className="flex flex-col">
-					{actions.map(
-						({ name, purpose, variant, icon, onClick }, index) => (
+		<article className="flex flex-row">
+			{active && purpose === "edit" && (
+				<ul className="flex flex-col">
+					{actions.map((action, index) => (
+						<li key={`question-${_id}-action-${action.name}`}>
 							<Button
 								className={clsx(index > 0 && "mt-4")}
-								key={`question-action-${name}`}
-								variant={variant}
-								onClick={onClick}
-								icon={icon}
+								{...action}
 							/>
-						)
-					)}
-				</div>
+						</li>
+					))}
+				</ul>
 			)}
 			<Card
 				className={clsx("mb-8", [
@@ -200,7 +237,7 @@ const Question = ({
 						? "question-active ml-8 bg-slate-200 shadow-md cursor-default"
 						: "w-full",
 				])}
-				onClick={onClick}
+				onClick={purpose === "edit" ? onClick : () => {}}
 			>
 				<h2 className="question-index" id={`question-${index}`}>
 					Question {index}
@@ -209,7 +246,7 @@ const Question = ({
 					{thumbnail && (
 						<div className="question-thumbnail my-4">
 							<Picture
-								src={thumbnail + "a"}
+								src={thumbnail}
 								width="1280"
 								height="720"
 								fallback="/fallback-thumbnail.webp"
@@ -222,11 +259,8 @@ const Question = ({
 						key="question-content-inactive"
 						content={title}
 					/>
-					{active && (
-						<div
-							key="question-content-active"
-							id="editor-wrapper"
-						>
+					{active && purpose === "edit" && (
+						<div key="question-content-active" id="editor-wrapper">
 							<div id="editor"></div>
 						</div>
 					)}
@@ -236,39 +270,98 @@ const Question = ({
 					{type === 0 ? (
 						<input
 							type="text"
-							defaultValue={correct[0]}
-							onChange={(e) => saveAnswer(e.target.value)}
+							defaultValue={purpose === "edit" ? correct[0] : ""}
+							onChange={
+								purpose === "edit"
+									? (e) => saveAnswer(e.target.value)
+									: () => {}
+							}
 						/>
 					) : (
-						<div className="flex flex-col">
+						<ul className="flex flex-col gap-2">
 							{choices.map((choice, index) => {
-								const identifier = `choice-${_id}-${choice}`;
+								const identifier = `choice-${_id}-${index}`;
 								return (
-									<div
+									<li
 										key={identifier}
 										className="flex flex-row items-center"
 									>
 										<input
-											className="mr-4 my-2 w-6 h-6"
+											className="my-2 w-6 h-6"
 											type="radio"
 											id={identifier}
 											name={`choice-${_id}`}
 											value={choice}
-											checked={choice === correct[1]}
-											onChange={(e) =>
-												saveAnswer(e.target.value)
+											checked={
+												purpose === "edit" &&
+												index === parseInt(correct[1])
+											}
+											onChange={
+												purpose === "edit"
+													? (e) => {
+															saveAnswer(
+																parseInt(index)
+															);
+													  }
+													: () => {}
 											}
 										/>
-										<label htmlFor={identifier}>
-											{choice}
-										</label>
-									</div>
+										<input
+											className="mx-4"
+											htmlFor={identifier}
+											onBlur={
+												purpose === "edit"
+													? (e) => {
+															saveChoice(
+																e.target.value,
+																index
+															);
+													  }
+													: () => {}
+											}
+											defaultValue={choice}
+											disabled={purpose === "solve"}
+										/>
+										<Button
+											variant="danger-outline"
+											icon={<MdDelete />}
+											className={clsx(
+												(index <= 1 ||
+													purpose === "solve") &&
+													"hidden"
+											)}
+											onClick={() => {
+												deleteChoice(index);
+											}}
+											disabled={
+												index <= 1 ||
+												purpose === "solve"
+											}
+										/>
+									</li>
 								);
 							})}
-						</div>
+							<li>
+								<Button
+									className={clsx(
+										"ml-10",
+										(choices.length > 6 ||
+											purpose === "solve") &&
+											"hidden"
+									)}
+									onClick={() => addChoice()}
+									disabled={
+										choices.length > 6 ||
+										purpose === "solve"
+									}
+								>
+									Add Choice
+								</Button>
+							</li>
+						</ul>
 					)}
 				</div>
-				{active && (
+				{active && purpose === "edit" && (
 					<div>
 						<hr className="my-4" />
 						<div className="question-edit-actions flex flex-col md:flex-row">
@@ -295,7 +388,7 @@ const Question = ({
 					</div>
 				)}
 			</Card>
-		</div>
+		</article>
 	);
 };
 

@@ -12,26 +12,17 @@ import Quizzes from "../../components/home/Quizzes";
 import { DataContext } from ".././_app";
 import Side from "../../components/edit/Side";
 import Main from "../../components/edit/Main";
+import { reduxifyQuestions } from "../../components/QuizViewer";
 
-const Edit = ({ quiz, setQuiz, setQuestions, loggedIn, queryResult }) => {
+const Edit = ({ questions, quiz, setQuiz, setQuestions, setChanges, loggedIn, queryResult }) => {
+	useEffect(() => {
+		reduxifyQuestions(queryResult, setQuiz, setQuestions);
+	}, [ queryResult ]);
+
 
 	useEffect(() => {
-		if(queryResult.quiz) {
-			let dictionary = {};
-
-			queryResult.quiz.questions.forEach((question) => {
-				dictionary[question._id] = question;
-			});
-
-			setQuiz({
-				...queryResult.quiz,
-				questions: null,
-			});
-
-			setQuestions(dictionary);
-		}
-		
-	}, [ queryResult ]);
+		setChanges([]);
+	}, []);
 
 	return (
 		<div
@@ -40,8 +31,8 @@ const Edit = ({ quiz, setQuiz, setQuestions, loggedIn, queryResult }) => {
 				"absolute top-0 pt-14",
 			)}
 		>
-			<Side {...quiz} />
-			<Main {...quiz} />
+			<Side purpose="edit" />
+			<Main purpose="edit" />
 		</div>
 	);
 };

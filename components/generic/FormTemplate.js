@@ -6,11 +6,23 @@ import Button from "./Button";
 import { useContext, useEffect, useState } from "react";
 import { ModalContext } from "./Modal";
 
-const FormTemplate = ({ title, formik, fields, callback }) => {
+const FormTemplate = ({
+	title,
+	formik,
+	fields,
+	callback,
+	submitText = "Submit",
+}) => {
 	const [disabled, setDisabled] = useState(false);
+	const [cb, setCb] = useState({
+		...callback,
+		fail: (message) => console.log(message),
+	});
 	const { modal, setModal } = useContext(ModalContext);
 
-	const cb = { ...callback, fail: (message) => console.log(message) };
+	useEffect(() => {
+		setCb({ ...callback, fail: (message) => console.log(message) });
+	}, [callback]);
 
 	function collectValues() {
 		let json = {};
@@ -26,8 +38,10 @@ const FormTemplate = ({ title, formik, fields, callback }) => {
 		try {
 			result = await formik.onSubmit(collectValues());
 		} catch (e) {
+			console.log(e);
 			setDisabled(false);
 		}
+		console.log(result);
 		if (result.status === "ok") {
 			cb.success(result);
 			setModal(null);
@@ -57,6 +71,7 @@ const FormTemplate = ({ title, formik, fields, callback }) => {
 									id={field.id}
 									name={field.id}
 									type={field.type}
+									as={field.as}
 									validate={field.validate}
 								/>
 								{errors[field.id] && touched[field.id] ? (
@@ -67,11 +82,11 @@ const FormTemplate = ({ title, formik, fields, callback }) => {
 							</div>
 						))}
 						<Button
-							isDisabled={disabled}
+							disabled={disabled}
 							className="mt-2"
 							type="submit"
 						>
-							Submit
+							{submitText}
 						</Button>
 					</Form>
 				)}

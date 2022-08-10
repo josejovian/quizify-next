@@ -33,12 +33,20 @@ export function setQuestions(questions) {
 	};
 }
 
+export function setChanges(changes) {
+	return {
+		type: "changesSet",
+		changes: changes
+	};
+}
+
 export function mapStateToProps(state) {
 	return {
 		loggedIn: state.loggedIn,
 		quiz: state.quiz,
 		question: state.question,
 		questions: state.questions,
+		changes: state.changes,
 	};
 }
 
@@ -48,4 +56,5 @@ export const mapDispatchToProps = {
 	setQuiz,
 	setQuestion,
 	setQuestions,
+	setChanges,
 };

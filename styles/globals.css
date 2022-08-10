@@ -56,8 +56,7 @@
 		@apply rounded-sm;
 	}
 
-	input:focus,
-	button:focus {
+	:is(input, button, textarea):focus {
 		outline: 0;
 	}
 
@@ -75,6 +74,12 @@
 		margin: 0 auto;
 		padding: 1rem 0;
 	}
+
+	textarea {
+		min-height: 4rem;
+		height: 8rem;
+		max-height: 12rem;
+	}
 }
 @tailwind base;
 
@@ -83,13 +88,21 @@
 		@apply text-inherit;
 	}
 
+	nav a:hover {
+		@apply text-gray-200;
+	}
+
+	nav a:active {
+		@apply text-gray-300;
+	}
+
 	#landing-background img {
 		width: 100% !important;
 		height: auto !important;
 		object-fit: cover !important;
 	}
 
-	:is(input, select) {
+	:is(input, select, textarea) {
 		@apply bg-slate-50 px-4 py-2 transition-colors duration-100;
 	}
 
@@ -97,8 +110,8 @@
 		@apply h-10;
 	}
 
-	:is(input, select):focus {
-		/* @apply bg-slate-200; */
+	:is(input, select, textarea):focus {
+		@apply bg-slate-200;
 	}
 
 	.subtle {
@@ -136,6 +149,14 @@
 		height: 2rem;
 		margin-top: -2rem;
 		visibility: hidden;
+	}
+	
+	#quiz-side {
+		width: 24rem;
+	}
+
+	#quiz-main {
+		width: calc(100% - 24rem);
 	}
 }
 @tailwind components;
