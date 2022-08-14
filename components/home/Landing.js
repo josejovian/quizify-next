@@ -14,7 +14,7 @@ const Landing = () => {
 				<p className="mt-8 text-xl md:text-4xl z-20">
 					Make, do and review quizzes.
 					<br />
-					Sign up to gain access to the site's features.
+					Sign up to gain access to the site&quot;s features.
 				</p>
 			</div>
 		</>
