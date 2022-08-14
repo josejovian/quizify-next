@@ -1,19 +1,10 @@
 import clsx from "clsx";
-import Image from "next/image";
-import { createContext, useContext, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import {
 	mapDispatchToProps,
 	mapStateToProps,
 } from "../../components/redux/setter";
-import api, { submitQuizAnswers } from "../../components/api";
-import Landing from "../../components/home/Landing";
-import Quizzes from "../../components/home/Quizzes";
-import { DataContext } from "../_app";
-import { reduxifyQuestions } from "../../components/quiz/QuizViewer";
-import Button from "../../components/generic/Button";
-import { useRouter } from "next/router";
-import { ModalContext } from "../../components/generic/Modal";
+import api, { submitQuizAnswers } from "../../components/API";
 import Works from "../../components/works/Works";
 import Footer from "../../components/page/Footer";
 

@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import {
