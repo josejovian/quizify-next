@@ -30,7 +30,7 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 		},
 		{
 			name: "Works",
-			link: `/works/${loggedIn._id}`,
+			link: `/works/${loggedIn && loggedIn._id}`,
 			forGuests: false,
 		},
 	];
