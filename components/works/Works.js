@@ -73,7 +73,7 @@ const Works = ({ works, author, loggedIn }) => {
 
 	return (
 		<div className="pt-16">
-			<h1 className="text-center">{author.username}'s Works</h1>
+			<h1 className="text-center">{author.username}&quot;s Works</h1>
 			<div
 				className={clsx(
 					"w-screen px-8 lg:px-32 py-16",
