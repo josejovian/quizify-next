@@ -2,23 +2,17 @@
 
 import dbConnect from "/backend/dbConnect";
 const Quiz = require("/backend/models/Quiz");
+const User = require("/backend/models/User");
 
 export default async function handler(req, res) {
 	await dbConnect();
 
-	const { name = null, desc = null, duration = null } = req.body;
-
-	let result = [];
+	let quizzes;
 	const { id } = req.query;
 
 	try {
-		result = await Quiz.model.findOne({ _id: id });
-
-		if (name !== null) result.name = name;
-		if (desc !== null) result.desc = desc;
-		if (duration !== null) result.duration = duration;
-
-		await result.save();
+		quizzes = await Quiz.model.find({ author: id }).populate("author");
+		console.log(quizzes);
 	} catch (e) {
 		console.log(e);
 		res.status(500).json({ status: "fail" });
@@ -26,7 +20,7 @@ export default async function handler(req, res) {
 	}
 
 	res.status(200).json({
-		...result._doc,
+		quizzes: quizzes,
 		status: "ok"
 	});
 }

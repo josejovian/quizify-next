@@ -2,21 +2,24 @@
 
 import dbConnect from "/backend/dbConnect";
 const Quiz = require("/backend/models/Quiz");
+const Question = require("/backend/models/Question");
 
 export default async function handler(req, res) {
 	await dbConnect();
 
-	const { name = null, desc = null, duration = null } = req.body;
+	let result = null;
 
-	let result = [];
-	const { id } = req.query;
+	const { author = null } = req.body;
 
 	try {
-		result = await Quiz.model.findOne({ _id: id });
-
-		if (name !== null) result.name = name;
-		if (desc !== null) result.desc = desc;
-		if (duration !== null) result.duration = duration;
+		result = new Quiz.model({
+			name: "New Quiz",
+			desc: "Quiz Description",
+			author: author,
+			duration: 60,
+			questions: [],
+			isPublic: true,
+		});
 
 		await result.save();
 	} catch (e) {

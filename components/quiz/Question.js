@@ -9,27 +9,36 @@ import { mapDispatchToProps, mapStateToProps } from "../redux/setter";
 import { Markup } from "interweave";
 import { MdImage, MdDelete, MdClose } from "react-icons/md";
 import { ModalContext } from "../generic/Modal";
-import UploadThumbnail from "../edit/UploadThumbnail";
+import UploadThumbnail from "./UploadThumbnail";
 import Picture from "../generic/Picture";
+import { alternate, verifyAnswer } from "../quiz/QuizViewer";
 
 const Question = ({
 	index,
 	onClick,
-	_question, // for question passed from Main
-	question = null, // for redux
-	questions, // for redux
-	setQuestion, // for redux
-	setQuestions, // for redux
-	changes, // for redux
-	setChanges, // for redux
 	purpose,
+	_question, // for question passed from Main
+
+	/* Redux */
+	question = null,
+	questions,
+	setQuestion,
+	setQuestions,
+	changes,
+	setChanges,
+	sheet,
+	setSheet,
+	quiz,
+	setQuiz,
+
+	/* Solve */
+	answer,
 }) => {
 	const { _id, title, type, choices, thumbnail, correct, points } = _question;
+	const active = question === _id;
 
 	const { setModal } = useContext(ModalContext);
 	const [quill, setQuill] = useState(null);
-
-	const active = question === _id;
 
 	const actions = [
 		{
@@ -56,14 +65,16 @@ const Question = ({
 		{
 			name: "delete",
 			variant: "danger",
-			onClick: () => {},
+			onClick: () => {
+				deleteQuestion();
+			},
 			icon: <MdDelete />,
 		},
 	];
 
 	function updateQuestion(object, id = _id) {
 		if (!changes.includes(_id)) {
-			changes.push(_id);
+			setChanges([...changes, _id]);
 		}
 
 		setQuestions({
@@ -178,7 +189,7 @@ const Question = ({
 		});
 	}
 
-	function saveAnswer(value) {
+	function editSaveAnswer(value) {
 		const temp = correct;
 		temp[type] = value;
 		updateQuestion({
@@ -217,8 +228,35 @@ const Question = ({
 		});
 	}
 
+	function solveSaveAnswer(value) {
+		setSheet((_sheet) => ({
+			..._sheet,
+			[_id]: value,
+		}));
+		console.log(sheet);
+	}
+
+	function saveAnswer(value) {
+		if (purpose === "edit") {
+			editSaveAnswer(value);
+		} else {
+			solveSaveAnswer(value);
+		}
+	}
+
+	function deleteQuestion() {
+		const _questions = {
+			...questions,
+		};
+
+		delete _questions[_id];
+		setQuestions(_questions);
+		setChanges([...changes, _id]);
+	}
+
 	return (
 		<article className="flex flex-row">
+			{/* Show action buttons ONLY for editor mode. */}
 			{active && purpose === "edit" && (
 				<ul className="flex flex-col">
 					{actions.map((action, index) => (
@@ -232,11 +270,20 @@ const Question = ({
 				</ul>
 			)}
 			<Card
-				className={clsx("mb-8", [
-					active
-						? "question-active ml-8 bg-slate-200 shadow-md cursor-default"
-						: "w-full",
-				])}
+				className={clsx(
+					"mb-8",
+					[
+						active
+							? "question-active ml-8 bg-slate-200 shadow-md cursor-default"
+							: "w-full",
+					],
+					// REVIEW MODE: Style cards to indicate questions answered correctly or incorrectly.
+					purpose === "review" && [
+						verifyAnswer(type, answer.sheet[_id], correct[type])
+							? "bg-green-100 hover:bg-green-200 active:bg-green-300"
+							: "bg-red-100 hover:bg-red-200 active:bg-red-300",
+					]
+				)}
 				onClick={purpose === "edit" ? onClick : () => {}}
 			>
 				<h2 className="question-index" id={`question-${index}`}>
@@ -270,12 +317,14 @@ const Question = ({
 					{type === 0 ? (
 						<input
 							type="text"
-							defaultValue={purpose === "edit" ? correct[0] : ""}
-							onChange={
-								purpose === "edit"
-									? (e) => saveAnswer(e.target.value)
-									: () => {}
-							}
+							defaultValue={alternate(
+								purpose,
+								correct[0],
+								"",
+								answer && answer.sheet[_id]
+							)}
+							onBlur={(e) => saveAnswer(e.target.value)}
+							disabled={purpose === "review"}
 						/>
 					) : (
 						<ul className="flex flex-col gap-2">
@@ -293,18 +342,18 @@ const Question = ({
 											name={`choice-${_id}`}
 											value={choice}
 											checked={
-												purpose === "edit" &&
-												index === parseInt(correct[1])
+												index ===
+												alternate(
+													purpose,
+													parseInt(correct[1]),
+													sheet[_id],
+													answer && answer.sheet[_id]
+												)
 											}
-											onChange={
-												purpose === "edit"
-													? (e) => {
-															saveAnswer(
-																parseInt(index)
-															);
-													  }
-													: () => {}
-											}
+											onChange={(e) => {
+												saveAnswer(parseInt(index));
+											}}
+											disabled={purpose === "review"}
 										/>
 										<input
 											className="mx-4"
@@ -359,6 +408,16 @@ const Question = ({
 								</Button>
 							</li>
 						</ul>
+					)}
+					{purpose === "review" && (
+						<>
+							<span className="head-subtle mt-4">Correct Answer</span>
+							<input
+								type="text"
+								defaultValue={correct[type]}
+								disabled
+							/>
+						</>
 					)}
 				</div>
 				{active && purpose === "edit" && (

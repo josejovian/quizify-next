@@ -7,9 +7,9 @@ import reducer from "../components/redux/reducer";
 import storage from "../components/redux/storage";
 import { PersistGate } from "redux-persist/integration/react";
 
-import Footer from "../components/Footer";
+import Footer from "../components/page/Footer";
 import Modal, { ModalContext } from "../components/generic/Modal";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/page/Navbar";
 import "../styles/globals.css";
 
 const persistConfig = {

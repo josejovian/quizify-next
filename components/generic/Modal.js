@@ -15,7 +15,7 @@ const Modal = () => {
 			className={clsx(
 				modal && [
 					"fixed top-0 left-0 w-screen h-screen pt-8",
-					"flex flex-row justify-center z-40",
+					"flex justify-center z-40",
 				]
 			)}
 		>
@@ -31,7 +31,7 @@ const Modal = () => {
 			<div
 				className={clsx(
 					modal && [
-						"flex flex-row justify-center p-8 h-min",
+						"flex flex-col justify-center p-8 h-min",
 						"roounded-sm text-black bg-slate-100 z-50",
 					]
 				)}

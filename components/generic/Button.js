@@ -17,7 +17,7 @@ const Button = ({
 				"shadow-md",
 				"transition-colors duration-100",
 				(disabled || loading) &&
-					"cursor-not-allowed bg-opacity-50 !bg-gray-400",
+					"cursor-not-allowed flex items-center justify-center bg-opacity-50 !bg-gray-400",
 				[
 					!icon && "px-4 py-2",
 					icon &&

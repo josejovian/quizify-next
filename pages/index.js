@@ -10,7 +10,7 @@ import api from "../components/api";
 import Landing from "../components/home/Landing";
 import Quizzes from "../components/home/Quizzes";
 import { DataContext } from "./_app";
-import Footer from "../components/Footer";
+import Footer from "../components/page/Footer";
 
 const Home = ({ loggedIn, queryResult }) => {
 	const { quizzes, result } = queryResult;
@@ -28,14 +28,10 @@ const Home = ({ loggedIn, queryResult }) => {
 		});
 	}, []);
 
-	useEffect(() => {
-		console.log(quizzes);
-	}, [queryResult]);
-
 	return (
 		<div
 			className={clsx(
-				"absolute w-screen",
+				"absolute quiz-port",
 				"flex flex-col",
 				[ !loggedIn && [
 					'h-screen justify-center items-center',
@@ -76,7 +72,6 @@ export const getStaticProps = async () => {
 		users = await api.get("api/account/all");
 		users = users.data;
 
-		console.log(users);
 		result = { status: "ok" };
 	} catch (e) {
 		console.log(e);

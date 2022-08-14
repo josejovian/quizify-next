@@ -19,7 +19,7 @@ const QuizSchema = Yup.object().shape({
 const Details = ({
 	quiz,
 	title,
-	initialValues = { name: "Quiz Title", desc: "Quiz Description" },
+	initialValues = { name: "Quiz Title", desc: "Quiz Description", duration: 60 },
 	mongoUpdate,
 	reduxUpdate,
 	submitText,
@@ -39,6 +39,7 @@ const Details = ({
 				initialValues: {
 					name: quiz.name,
 					desc: quiz.desc,
+					duration: quiz.duration,
 				},
 				validationSchema: QuizSchema,
 				onSubmit: _mongoUpdate,
@@ -54,6 +55,11 @@ const Details = ({
 					id: "desc",
 					type: "textarea",
 					as: "textarea",
+				},
+				{
+					title: "Duration (Minutes)",
+					id: "duration",
+					type: "number",
 				},
 			]}
 			callback={{ success: _reduxUpdate }}

@@ -1,24 +1,19 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
 import dbConnect from "/backend/dbConnect";
+const Answer = require("/backend/models/Answer");
 const Quiz = require("/backend/models/Quiz");
+const User = require("/backend/models/User");
 
 export default async function handler(req, res) {
 	await dbConnect();
 
-	const { name = null, desc = null, duration = null } = req.body;
-
-	let result = [];
+	let answers;
 	const { id } = req.query;
 
 	try {
-		result = await Quiz.model.findOne({ _id: id });
-
-		if (name !== null) result.name = name;
-		if (desc !== null) result.desc = desc;
-		if (duration !== null) result.duration = duration;
-
-		await result.save();
+		answers = await Answer.model.find({ author: id }).populate("quiz author");
+		console.log(answers);
 	} catch (e) {
 		console.log(e);
 		res.status(500).json({ status: "fail" });
@@ -26,7 +21,7 @@ export default async function handler(req, res) {
 	}
 
 	res.status(200).json({
-		...result._doc,
+		answers: answers,
 		status: "ok"
 	});
 }

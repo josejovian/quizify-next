@@ -2,23 +2,19 @@
 
 import dbConnect from "/backend/dbConnect";
 const Quiz = require("/backend/models/Quiz");
+const Question = require("/backend/models/Question");
 
 export default async function handler(req, res) {
 	await dbConnect();
 
-	const { name = null, desc = null, duration = null } = req.body;
-
-	let result = [];
-	const { id } = req.query;
+	let result;
 
 	try {
-		result = await Quiz.model.findOne({ _id: id });
-
-		if (name !== null) result.name = name;
-		if (desc !== null) result.desc = desc;
-		if (duration !== null) result.duration = duration;
-
-		await result.save();
+		result = await Quiz.model.findOne({ _id: req.query.id });
+		for (const key of result.questions) {
+			await Question.model.deleteOne({ _id: key });
+		}
+		await Quiz.model.deleteOne({ _id: req.query.id });
 	} catch (e) {
 		console.log(e);
 		res.status(500).json({ status: "fail" });
@@ -26,7 +22,6 @@ export default async function handler(req, res) {
 	}
 
 	res.status(200).json({
-		...result._doc,
-		status: "ok"
+		status: "ok",
 	});
 }
