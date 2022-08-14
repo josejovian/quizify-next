@@ -47,7 +47,7 @@ const Register = ({ register, reduxLogin }) => {
 				{
 					title: "Username",
 					id: "username",
-					type: "username",
+					type: "text",
 					validate: (username) => {
 						let error;
 						if(data.users[username]) {

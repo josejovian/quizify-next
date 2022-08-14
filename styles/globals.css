@@ -3,6 +3,10 @@
 	src: url("../public/fonts/Inter-VariableFont_slnt,wght.ttf");
 }
 
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';
+
 @layer base {
 	/* Major */
 	html,
@@ -52,34 +56,115 @@
 		@apply rounded-sm;
 	}
 
-	input:focus,
-	button:focus {
+	:is(input, button, textarea):focus {
 		outline: 0;
 	}
 
 	hr {
 		@apply border-gray-300;
 	}
+
+	a {
+		@apply text-blue-500 hover:text-blue-700;
+	}
+
+	.question-content img {
+		width: min-content;
+		height: auto;
+		margin: 0 auto;
+		padding: 1rem 0;
+	}
+
+	textarea {
+		min-height: 4rem;
+		height: 8rem;
+		max-height: 12rem;
+	}
 }
 @tailwind base;
 
 @layer components {
+	nav a {
+		@apply text-inherit;
+	}
+
+	nav a:hover {
+		@apply text-gray-200;
+	}
+
+	nav a:active {
+		@apply text-gray-300;
+	}
+
 	#landing-background img {
 		width: 100% !important;
 		height: auto !important;
 		object-fit: cover !important;
 	}
 
-	.modal-form-wrapper input {
-		@apply bg-slate-200 px-4 py-2 transition-colors duration-100;
+	:is(input, select, textarea) {
+		@apply bg-slate-50 px-4 py-2 transition-colors duration-100;
 	}
 
-	.modal-form-wrapper input:focus {
-		@apply bg-slate-300;
+	select {
+		@apply h-10;
+	}
+
+	:is(input, select, textarea):focus {
+		@apply bg-slate-200;
 	}
 
 	.subtle {
 		@apply text-sm text-gray-800;
+	}
+
+	.head-subtle {
+		@apply uppercase text-sm text-slate-400 tracking-widest font-semibold mb-2;
+	}
+
+	.quiz-port {
+		width: calc(100vw - 20px);
+	}
+
+	.question-active {
+		width: calc(100% - (64px));
+	}
+
+	.question-edit-actions :is(input, select) {
+		@apply w-full;
+	}
+
+	#editor {
+		background: white!important;
+	}
+
+	#editor svg {
+		height: max-content;
+	}
+
+	/* Source: https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header */
+	.question-index::before {
+		content: "";
+		display: block;
+		height: 2rem;
+		margin-top: -2rem;
+		visibility: hidden;
+	}
+	
+	.w-side {
+		width: 24rem;
+	}
+
+	.w-main {
+		width: calc(100% - 24rem);
+	}
+
+	.h-exclude-nav {
+		height: calc(100vh - 3.5625rem);
+	}
+
+	.pageify {
+		@apply w-screen px-8 sm:px-8 md:px-8 lg:px-16 xl:px-16 2xl:px-32 overflow-x-hidden;
 	}
 }
 @tailwind components;
@@ -112,10 +197,6 @@
 	}
 	.font-black {
 		font-variation-settings: "wght" 900;
-	}
-
-	.pageify {
-		@apply w-screen px-8 sm:px-8 md:px-8 lg:px-16 xl:px-16 2xl:px-32;
 	}
 }
 

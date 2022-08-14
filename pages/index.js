@@ -10,6 +10,7 @@ import api from "../components/api";
 import Landing from "../components/home/Landing";
 import Quizzes from "../components/home/Quizzes";
 import { DataContext } from "./_app";
+import Footer from "../components/page/Footer";
 
 const Home = ({ loggedIn, queryResult }) => {
 	const { quizzes, result } = queryResult;
@@ -27,27 +28,34 @@ const Home = ({ loggedIn, queryResult }) => {
 		});
 	}, []);
 
-	useEffect(() => {
-		console.log(quizzes);
-	}, [queryResult]);
-
 	return (
 		<div
 			className={clsx(
-				"absolute top-0 w-screen h-screen",
-				"flex justify-center"
+				"absolute quiz-port",
+				"flex flex-col",
+				[ !loggedIn && [
+					'h-screen justify-center items-center',
+				], loggedIn && [
+					'top-14'
+				]]
 			)}
 		>
 			{loggedIn ? (
-				<Quizzes
-					quizzes={quizzes.filter(
-						(quiz) =>
-							quiz.isPublic ||
-							(!quiz.isPublic && quiz.author._id === loggedIn._id)
-					)}
-				/>
+				<>
+					<Quizzes
+						quizzes={quizzes.filter(
+							(quiz) =>
+								quiz.isPublic ||
+								(!quiz.isPublic && quiz.author._id === loggedIn._id)
+						)}
+					/>
+					<Footer />
+				</>
 			) : (
-				<Landing />
+				<>
+					<Landing />
+					<Footer className="fixed" />
+				</>
 			)}
 		</div>
 	);
@@ -64,7 +72,6 @@ export const getStaticProps = async () => {
 		users = await api.get("api/account/all");
 		users = users.data;
 
-		console.log(users);
 		result = { status: "ok" };
 	} catch (e) {
 		console.log(e);

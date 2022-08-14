@@ -1,11 +1,12 @@
 import { useState, useContext, useEffect } from "react";
-import { register, login } from "./api";
+import { register, login } from "../api";
 import { connect } from "react-redux";
-import { mapDispatchToProps, mapStateToProps } from "./redux/setter";
+import { mapDispatchToProps, mapStateToProps } from "../redux/setter";
 import clsx from "clsx";
-import Login from "./home/Login";
-import Register from "./home/Register";
-import { ModalContext } from "./generic/Modal";
+import Login from "../home/Login";
+import Register from "../home/Register";
+import { ModalContext } from "../generic/Modal";
+import Link from "next/link";
 
 const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 	const { setModal } = useContext(ModalContext);
@@ -29,7 +30,7 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 		},
 		{
 			name: "Works",
-			link: "/",
+			link: `/works/${loggedIn._id}`,
 			forGuests: false,
 		},
 	];
@@ -43,6 +44,7 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 				[
 					{
 						name: loggedIn.username,
+						link: `/quizzes/${loggedIn._id}`,
 						forGuests: false,
 					},
 					{
@@ -59,14 +61,16 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 			links
 				.filter((link) => link.forGuests === (loggedIn === null))
 				.map((link) => (
-					<a
-						key={link.name}
-						className="ml-8"
-						href={link.link ?? "#"}
-						onClick={link.onClick ?? function () {}}
-					>
-						{link.name}
-					</a>
+					<li key={link.name}>
+						<Link href={link.link ?? "#"} passHref>
+							<a
+								className="ml-8"
+								onClick={link.onClick ?? function () {}}
+							>
+								{link.name}
+							</a>
+						</Link>
+					</li>
 				))
 		);
 	}, [loggedIn]);
@@ -80,7 +84,7 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 	}
 
 	return (
-		<div
+		<nav
 			className={clsx(
 				"pageify",
 				"fixed top-0 left-0 py-4",
@@ -88,11 +92,13 @@ const Navbar = ({ loggedIn, loginUser, logoutUser }) => {
 				"bg-zinc-700 text-white z-20"
 			)}
 		>
-			<a href="/">
-				<span className="font-semibold">QUIZIFY</span>
-			</a>
-			<div className="flex">{elements}</div>
-		</div>
+			<Link href="/" passHref>
+				<a>
+					<span className="font-semibold">QUIZIFY</span>
+				</a>
+			</Link>
+			<ul className="flex">{elements}</ul>
+		</nav>
 	);
 };
 
