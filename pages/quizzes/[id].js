@@ -4,7 +4,7 @@ import {
 	mapDispatchToProps,
 	mapStateToProps,
 } from "../../components/redux/setter";
-import api from "../../components/api";
+import api from "../../components/API";
 import Quizzes from "../../components/home/Quizzes";
 import Footer from "../../components/page/Footer";
 

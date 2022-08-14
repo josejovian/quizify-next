@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { register, login } from "../api";
+import { register, login } from "../API";
 import { connect } from "react-redux";
 import { mapDispatchToProps, mapStateToProps } from "../redux/setter";
 import clsx from "clsx";

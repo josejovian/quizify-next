@@ -1,12 +1,11 @@
 import clsx from "clsx";
-import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import {
 	mapDispatchToProps,
 	mapStateToProps,
 } from "../../components/redux/setter";
-import api, { submitQuizAnswers } from "../../components/api";
+import api, { submitQuizAnswers } from "../../components/API";
 import Side from "../../components/quiz/Side";
 import Main from "../../components/quiz/Main";
 import { reduxifyQuestions } from "../../components/quiz/QuizViewer";

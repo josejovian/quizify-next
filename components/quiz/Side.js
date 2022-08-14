@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { useContext, useState } from "react";
 import { useEffect } from "react";
 import { connect } from "react-redux";
-import { createQuizQuestion, updateQuiz, updateQuizQuestions } from "../api";
+import { createQuizQuestion, updateQuiz, updateQuizQuestions } from "../API";
 import Button from "../generic/Button";
 import { ModalContext } from "../generic/Modal";
 import Details from "./Details";

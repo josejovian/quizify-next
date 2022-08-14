@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { MdPerson, MdAccessTimeFilled, MdQuestionAnswer } from "react-icons/md";
 import { connect } from "react-redux";
-import { createQuiz, deleteQuiz } from "../api";
+import { createQuiz, deleteQuiz } from "../API";
 import Button from "../generic/Button";
 import Card from "../generic/Card";
 import { mapDispatchToProps, mapStateToProps } from "../redux/setter";

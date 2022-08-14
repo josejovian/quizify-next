@@ -6,7 +6,7 @@ import {
 	mapDispatchToProps,
 	mapStateToProps,
 } from "../components/redux/setter";
-import api from "../components/api";
+import api from "../components/API";
 import Landing from "../components/home/Landing";
 import Quizzes from "../components/home/Quizzes";
 import { DataContext } from "./_app";
