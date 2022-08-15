@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MdPerson, MdAccessTimeFilled, MdQuestionAnswer } from "react-icons/md";
 import { connect } from "react-redux";
 import { createQuiz, deleteQuiz } from "../API";
@@ -101,6 +101,8 @@ export const Quizzes = ({
 	loggedIn,
 	author = null,
 }) => {
+	const [working, setWorking] = useState(false);
+
 	const router = useRouter();
 
 	const quizElements = quizzes.map((quiz) => {
@@ -114,8 +116,11 @@ export const Quizzes = ({
 	});
 
 	async function newQuiz() {
-		console.log(loggedIn);
+		if (working) return;
+
+		setWorking(true);
 		await createQuiz(loggedIn._id).then((res) => {
+			setWorking(false);
 			router.push(`/edit/${res._id}`);
 		});
 	}
@@ -131,18 +136,46 @@ export const Quizzes = ({
 					)}
 				>
 					{quizElements}
+					{loggedIn &&
+						author &&
+						loggedIn.username === author.username && (
+							<Card
+								className={clsx(
+									"flex flex-col justify-center items-center cursor-pointer",
+									quizzes.length >= 5 && "hidden",
+									working && "opacity-70"
+								)}
+								onClick={
+									quizzes.length < 5 && !working
+										? () => newQuiz()
+										: () => {}
+								}
+								style={{
+									minHeight: "157px"
+								}}
+							>
+								<p className="text-2xl text-center">
+									Click here to create a new quiz.
+								</p>
+								<p className="text-md text-center">
+									You can
+									create {5 - quizzes.length} more quizzes.
+								</p>
+							</Card>
+						)}
 				</div>
 			) : (
 				<div className="quiz-port flex flex-col items-center justify-center mt-20 mb-16">
 					<span>
 						No quizzes.{" "}
-						{loggedIn &&
+						{!working &&
+							loggedIn &&
 							author &&
 							loggedIn.username === author.username && (
 								<Link href="#" passHref>
 									<a>
 										<span onClick={() => newQuiz()}>
-											Create a new one.
+											Create a new one. You can create up to 5 quizzes in one account.
 										</span>
 									</a>
 								</Link>
