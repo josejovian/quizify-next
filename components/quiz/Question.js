@@ -346,7 +346,7 @@ const Question = ({
 												alternate(
 													purpose,
 													parseInt(correct[1]),
-													sheet[_id],
+													sheet && sheet[_id],
 													answer && answer.sheet[_id]
 												)
 											}
@@ -369,14 +369,14 @@ const Question = ({
 													: () => {}
 											}
 											defaultValue={choice}
-											disabled={purpose === "solve"}
+											disabled={purpose !== "edit"}
 										/>
 										<Button
 											variant="danger-outline"
 											icon={<MdDelete />}
 											className={clsx(
 												(index <= 1 ||
-													purpose === "solve") &&
+													purpose !== "edit") &&
 													"hidden"
 											)}
 											onClick={() => {
@@ -384,7 +384,7 @@ const Question = ({
 											}}
 											disabled={
 												index <= 1 ||
-												purpose === "solve"
+												purpose !== "edit"
 											}
 										/>
 									</li>
@@ -395,13 +395,13 @@ const Question = ({
 									className={clsx(
 										"ml-10",
 										(choices.length > 6 ||
-											purpose === "solve") &&
+											purpose !== "edit") &&
 											"hidden"
 									)}
 									onClick={() => addChoice()}
 									disabled={
 										choices.length > 6 ||
-										purpose === "solve"
+										purpose !== "edit"
 									}
 								>
 									Add Choice

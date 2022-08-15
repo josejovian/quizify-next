@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { useEffect } from "react";
-import { MdPerson, MdAccessTimeFilled, MdQuestionAnswer } from "react-icons/md";
+import { MdPerson, MdAccessTimeFilled, MdQuestionAnswer, MdStar } from "react-icons/md";
 import { connect } from "react-redux";
 import Button from "../generic/Button";
 import Card from "../generic/Card";
@@ -37,6 +37,10 @@ const Work = ({ work, isOwner }) => {
 					<Props>
 						<MdAccessTimeFilled className="mr-2" />
 						<span>{new Date(work.start).toLocaleTimeString()}</span>
+					</Props>
+					<Props>
+						<MdStar className="mr-2" />
+						<span>{work.score} points</span>
 					</Props>
 				</div>
 				{work.quiz && (

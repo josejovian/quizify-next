@@ -60,10 +60,10 @@ export const Quiz = ({ quiz, isOwner }) => {
 						</span>
 					</Props>
 				</div>
-				<div className="flex flex-row mt-4 md:mt-0 gap-2">
-					<Link href={`/solve/${quiz._id}`}>
+				<div className={clsx("flex flex-row mt-4 md:mt-0 gap-2")} >
+					<Link href={quiz.questions.length ? `/solve/${quiz._id}` : "#"}>
 						<a className="w-full">
-							<Button className={quizSpecialActionStyle}>
+							<Button className={quizSpecialActionStyle} disabled={quiz.questions.length === 0}>
 								Solve
 							</Button>
 						</a>

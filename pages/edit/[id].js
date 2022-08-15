@@ -9,6 +9,7 @@ import api from "../../components/API";
 import Side from "../../components/quiz/Side";
 import Main from "../../components/quiz/Main";
 import { reduxifyQuestions } from "../../components/quiz/QuizViewer";
+import Message from "../../components/generic/Message";
 
 const Edit = ({
 	questions,
@@ -27,11 +28,15 @@ const Edit = ({
 		setChanges([]);
 	}, []);
 
-	return (
+	return (quiz && quiz.author === loggedIn._id) ? (
 		<div className={clsx("quiz-port", "absolute top-0 pt-14")}>
 			<Side purpose="edit" />
 			<Main purpose="edit" />
 		</div>
+	) : (
+		<Message>
+			You do not have permission to edit this quiz.
+		</Message>
 	);
 };
 

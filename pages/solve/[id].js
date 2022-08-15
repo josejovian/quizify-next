@@ -12,6 +12,7 @@ import { reduxifyQuestions } from "../../components/quiz/QuizViewer";
 import Button from "../../components/generic/Button";
 import { useRouter } from "next/router";
 import { ModalContext } from "../../components/generic/Modal";
+import Message from "../../components/generic/Message";
 
 const Solve = ({
 	quiz,
@@ -109,6 +110,14 @@ const Solve = ({
 			clearInterval(temp);
 		};
 	}, [start]);
+
+	if(queryResult.quiz.questions.length === 0) {
+		return (
+			<Message>
+				This quiz does not have any questions.
+			</Message>
+		)
+	}
 
 	return start ? (
 		<div className={clsx("quiz-port", "absolute top-0 pt-14")}>
